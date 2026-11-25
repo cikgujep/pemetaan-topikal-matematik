@@ -17,7 +17,7 @@ Skop: paparan interaktif pemetaan topikal (satu halaman HTML), penambahan dimens
 
 - Inventori 603 SP (139 + 166 + 127 + 171), semua id_nod unik.
 - 181 SK dalam inventori sepadan dengan 181 baris kelompok dan 181 id dalam matriks. Tiada pendua atau id yatim.
-- 356 pautan (228 AM4 dan 128 AM5). Semua nod_sasaran sah. Semua nod_sumber sah kecuali 15 pautan TIADA ANGKER tanpa nod sumber (5 bernilai "-", 10 bernilai "TIADA").
+- 356 pautan (228 AM4 dan 128 AM5). Semua nod_sasaran sah. Semua nod_sumber sah kecuali 15 pautan TIADA PRASYARAT tanpa nod sumber (5 bernilai "-", 10 bernilai "TIADA").
 
 ## Perlu disahkan guru
 

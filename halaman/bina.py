@@ -94,7 +94,7 @@ if os.path.exists(th):
         '__S_BID__': str(len({r['bidang'] for r in mx})), '__S_PAU__': str(len(pall)),
         '__S_DKSP__': str(len(dk['sp'])), '__S_DKST__': str(len(dk['st'])),
         '__J_SAMBUNGAN__': str(jc['SAMBUNGAN']), '__J_GENERALISASI__': str(jc['GENERALISASI']), '__J_ALAT__': str(jc['ALAT']),
-        '__J_NOTASI__': str(jc['NOTASI']), '__J_TIADA__': str(jc['TIADA ANGKER']),
+        '__J_NOTASI__': str(jc['NOTASI']), '__J_TIADA__': str(jc['TIADA PRASYARAT']),
         '__M_MULA__': str(len(mula)), '__M_MULALIST__': ', '.join(mula), '__M_JEDA__': str(jeda),
         '__H_Y__': str(sum(1 for r in inv if r['perlu_semak_visual'] == 'Y')), '__H_LOW__': str(sum(1 for l in pall if l['keyakinan'] == 'rendah')),
         '__KTABLE__': ''.join(kt),

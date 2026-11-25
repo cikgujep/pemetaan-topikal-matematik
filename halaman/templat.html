@@ -729,7 +729,7 @@ function renderJeda(){
   });
   const dep=threads.filter(t=>flags[t.i].mulaStrict&&!flags[t.i].mula);
   let h='<div class="note"><b>Mula baharu</b>: '+threads.filter(t=>flags[t.i].mula).length+' rantaian. Takrif: rantaian tanpa nod primer Matematik, dan tiada SP Matematik Tambahan dalamnya menerima pautan kuat jenis SAMBUNGAN, GENERALISASI atau NOTASI daripada SP Matematik (pautan ALAT tidak dikira). Hasil ini bergantung pada kualiti pautan, yang belum diaudit.'
-    +(dep.length?' <b>'+dep.length+' rantaian</b> lain tiada nod primer Matematik dalam matriks tetapi berangker melalui pautan: '+dep.map(t=>esc(t.rantaian.split(' ')[0])).join(', ')+'. Ini menunjukkan isu pengelasan rantaian, bukan topik baharu.':'')
+    +(dep.length?' <b>'+dep.length+' rantaian</b> lain tiada nod primer Matematik dalam matriks tetapi mempunyai prasyarat melalui pautan: '+dep.map(t=>esc(t.rantaian.split(' ')[0])).join(', ')+'. Ini menunjukkan isu pengelasan rantaian, bukan topik baharu.':'')
     +'<br><b>Jeda</b>: '+threads.filter(t=>flags[t.i].gaps.length).length+' rantaian, '+threads.reduce((a,t)=>a+flags[t.i].gaps.length,0)+' kekosongan. Jeda ditakrif sebagai jarak dua tingkatan atau lebih antara dua kemunculan berturut-turut (sekurang-kurangnya satu tingkatan tiada). Hanya nod primer dikira.</div>';
   h+='<h2 style="font-size:16px;margin:12px 0 6px">Mula baharu ('+mb.length+')</h2>';
   h+=mb.length?'<div class="cards">'+mb.map(t=>{
@@ -772,7 +772,7 @@ function renderFoot(){
     +'<li>SP dengan sumber "tidak pasti": '+unsure.length+' ('+esc(unsure.map(r=>r.id_nod).join(', '))+').</li>'
     +'<li>SK keyakinan rendah ('+low.length+'): '+esc(low.join(', '))+'.</li>'
     +'<li>Pautan keyakinan rendah: '+lowL+' daripada '+L.length+'.</li>'
-    +'<li>Pautan tanpa nod sumber sah (jenis TIADA ANGKER, nilai "-" atau "TIADA"): '+noSrc.length+' ('+esc(noSrc.map(l=>l.id_pautan).join(', '))+').</li>'
+    +'<li>Pautan tanpa nod sumber sah (jenis TIADA PRASYARAT, nilai "-" atau "TIADA"): '+noSrc.length+' ('+esc(noSrc.map(l=>l.id_pautan).join(', '))+').</li>'
     +'<li>SK dengan penomboran SP tidak berturutan dalam inventori: '+(gapSk.length?esc(gapSk.join('; ')):'tiada')+'.</li>'
     +'</ul></details>';
 }
