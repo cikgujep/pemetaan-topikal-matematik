@@ -1,0 +1,72 @@
+﻿id_bab,dokumen,tingkatan,bab_no,bab_tajuk,bil_sp,julat_sp
+M1-B1,DSKP KSSM Matematik Tingkatan 1,1,1,NOMBOR NISBAH,21,1.1.1 hingga 1.5.3
+M1-B2,DSKP KSSM Matematik Tingkatan 1,1,2,FAKTOR DAN GANDAAN,8,2.1.1 hingga 2.2.3
+M1-B3,DSKP KSSM Matematik Tingkatan 1,1,3,"KUASA DUA, PUNCA KUASA DUA, KUASA TIGA DAN PUNCA KUASA TIGA",18,3.1.1 hingga 3.2.9
+M1-B4,DSKP KSSM Matematik Tingkatan 1,1,4,"NISBAH, KADAR DAN KADARAN",13,4.1.1 hingga 4.5.3
+M1-B5,DSKP KSSM Matematik Tingkatan 1,1,5,UNGKAPAN ALGEBRA,8,5.1.1 hingga 5.2.3
+M1-B6,DSKP KSSM Matematik Tingkatan 1,1,6,PERSAMAAN LINEAR,11,6.1.1 hingga 6.3.3
+M1-B7,DSKP KSSM Matematik Tingkatan 1,1,7,KETAKSAMAAN LINEAR,5,7.1.1 hingga 7.2.3
+M1-B8,DSKP KSSM Matematik Tingkatan 1,1,8,GARIS DAN SUDUT,16,8.1.1 hingga 8.3.6
+M1-B9,DSKP KSSM Matematik Tingkatan 1,1,9,POLIGON ASAS,9,9.1.1 hingga 9.3.4
+M1-B10,DSKP KSSM Matematik Tingkatan 1,1,10,PERIMETER DAN LUAS,8,10.1.1 hingga 10.3.2
+M1-B11,DSKP KSSM Matematik Tingkatan 1,1,11,PENGENALAN SET,10,11.1.1 hingga 11.2.5
+M1-B12,DSKP KSSM Matematik Tingkatan 1,1,12,PENGENDALIAN DATA,6,12.1.1 hingga 12.1.6
+M1-B13,DSKP KSSM Matematik Tingkatan 1,1,13,TEOREM PYTHAGORAS,6,13.1.1 hingga 13.2.2
+M2-B1,DSKP KSSM Matematik Tingkatan 2,2,1,POLA DAN JUJUKAN,6,1.1.1 hingga 1.3.3
+M2-B2,DSKP KSSM Matematik Tingkatan 2,2,2,PEMFAKTORAN DAN PECAHAN ALGEBRA,10,2.1.1 hingga 2.3.3
+M2-B3,DSKP KSSM Matematik Tingkatan 2,2,3,RUMUS ALGEBRA,4,3.1.1 hingga 3.1.4
+M2-B4,DSKP KSSM Matematik Tingkatan 2,2,4,POLIGON,6,4.1.1 hingga 4.2.4
+M2-B5,DSKP KSSM Matematik Tingkatan 2,2,5,BULATAN,9,5.1.1 hingga 5.3.4
+M2-B6,DSKP KSSM Matematik Tingkatan 2,2,6,BENTUK GEOMETRI TIGA DIMENSI,8,6.1.1 hingga 6.4.3
+M2-B7,DSKP KSSM Matematik Tingkatan 2,2,7,KOORDINAT,9,7.1.1 hingga 7.3.1
+M2-B8,DSKP KSSM Matematik Tingkatan 2,2,8,GRAF FUNGSI,5,8.1.1 hingga 8.2.3
+M2-B9,DSKP KSSM Matematik Tingkatan 2,2,9,LAJU DAN PECUTAN,7,9.1.1 hingga 9.2.3
+M2-B10,DSKP KSSM Matematik Tingkatan 2,2,10,KECERUNAN GARIS LURUS,5,10.1.1 hingga 10.1.5
+M2-B11,DSKP KSSM Matematik Tingkatan 2,2,11,TRANSFORMASI ISOMETRI,19,11.1.1 hingga 11.6.2
+M2-B12,DSKP KSSM Matematik Tingkatan 2,2,12,SUKATAN KECENDERUNGAN MEMUSAT,7,12.1.1 hingga 12.1.7
+M2-B13,DSKP KSSM Matematik Tingkatan 2,2,13,KEBARANGKALIAN MUDAH,8,13.1.1 hingga 13.4.1
+M3-B1,DSKP KSSM Matematik Tingkatan 3,3,1,INDEKS,9,1.1.1 hingga 1.2.7
+M3-B2,DSKP KSSM Matematik Tingkatan 3,3,2,BENTUK PIAWAI,5,2.1.1 hingga 2.2.3
+M3-B3,DSKP KSSM Matematik Tingkatan 3,3,3,"MATEMATIK PENGGUNA: SIMPANAN DAN PELABURAN, KREDIT DAN HUTANG",12,3.1.1 hingga 3.2.6
+M3-B4,DSKP KSSM Matematik Tingkatan 3,3,4,LUKISAN BERSKALA,5,4.1.1 hingga 4.1.5
+M3-B5,DSKP KSSM Matematik Tingkatan 3,3,5,NISBAH TRIGONOMETRI,7,5.1.1 hingga 5.1.7
+M3-B6,DSKP KSSM Matematik Tingkatan 3,3,6,SUDUT DAN TANGEN BAGI BULATAN,9,6.1.1 hingga 6.4.1
+M3-B7,DSKP KSSM Matematik Tingkatan 3,3,7,PELAN DAN DONGAKAN,5,7.1.1 hingga 7.2.3
+M3-B8,DSKP KSSM Matematik Tingkatan 3,3,8,LOKUS DALAM DUA DIMENSI,4,8.1.1 hingga 8.2.3
+M3-B9,DSKP KSSM Matematik Tingkatan 3,3,9,GARIS LURUS,7,9.1.1 hingga 9.1.7
+M4-B1,DSKP KSSM Matematik Tingkatan 4 & 5,4,1,FUNGSI DAN PERSAMAAN KUADRATIK DALAM SATU PEMBOLEH UBAH,8,1.1.1 hingga 1.1.8
+M4-B2,DSKP KSSM Matematik Tingkatan 4 & 5,4,2,ASAS NOMBOR,4,2.1.1 hingga 2.1.4
+M4-B3,DSKP KSSM Matematik Tingkatan 4 & 5,4,3,PENAAKULAN LOGIK,12,3.1.1 hingga 3.2.6
+M4-B4,DSKP KSSM Matematik Tingkatan 4 & 5,4,4,OPERASI SET,9,4.1.1 hingga 4.3.3
+M4-B5,DSKP KSSM Matematik Tingkatan 4 & 5,4,5,RANGKAIAN DALAM TEORI GRAF,5,5.1.1 hingga 5.1.5
+M4-B6,DSKP KSSM Matematik Tingkatan 4 & 5,4,6,KETAKSAMAAN LINEAR DALAM DUA PEMBOLEH UBAH,7,6.1.1 hingga 6.2.4
+M4-B7,DSKP KSSM Matematik Tingkatan 4 & 5,4,7,GRAF GERAKAN,7,7.1.1 hingga 7.2.4
+M4-B8,DSKP KSSM Matematik Tingkatan 4 & 5,4,8,SUKATAN SERAKAN DATA TAK TERKUMPUL,8,8.1.1 hingga 8.2.6
+M4-B9,DSKP KSSM Matematik Tingkatan 4 & 5,4,9,KEBARANGKALIAN PERISTIWA BERGABUNG,8,9.1.1 hingga 9.4.1
+M4-B10,DSKP KSSM Matematik Tingkatan 4 & 5,4,10,MATEMATIK PENGGUNA: PENGURUSAN KEWANGAN,2,10.1.1 hingga 10.1.2
+M5-B1,DSKP KSSM Matematik Tingkatan 4 & 5,5,1,UBAHAN,9,1.1.1 hingga 1.3.2
+M5-B2,DSKP KSSM Matematik Tingkatan 4 & 5,5,2,MATRIKS,10,2.1.1 hingga 2.2.7
+M5-B3,DSKP KSSM Matematik Tingkatan 4 & 5,5,3,MATEMATIK PENGGUNA: INSURANS,3,3.1.1 hingga 3.1.3
+M5-B4,DSKP KSSM Matematik Tingkatan 4 & 5,5,4,MATEMATIK PENGGUNA: PERCUKAIAN,4,4.1.1 hingga 4.1.4
+M5-B5,DSKP KSSM Matematik Tingkatan 4 & 5,5,5,"KEKONGRUENAN, PEMBESARAN DAN GABUNGAN TRANSFORMASI",14,5.1.1 hingga 5.4.2
+M5-B6,DSKP KSSM Matematik Tingkatan 4 & 5,5,6,NISBAH DAN GRAF FUNGSI TRIGONOMETRI,7,6.1.1 hingga 6.2.3
+M5-B7,DSKP KSSM Matematik Tingkatan 4 & 5,5,7,SUKATAN SERAKAN DATA TERKUMPUL,8,7.1.1 hingga 7.2.5
+M5-B8,DSKP KSSM Matematik Tingkatan 4 & 5,5,8,PEMODELAN MATEMATIK,2,8.1.1 hingga 8.1.2
+AM4-B1,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,4,1,FUNGSI,11,1.1.1 hingga 1.3.3
+AM4-B2,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,4,2,FUNGSI KUADRATIK,11,2.1.1 hingga 2.3.6
+AM4-B3,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,4,3,SISTEM PERSAMAAN,5,3.1.1 hingga 3.2.2
+AM4-B4,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,4,4,"INDEKS, SURD DAN LOGARITMA",13,4.1.1 hingga 4.4.1
+AM4-B5,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,4,5,JANJANG,9,5.1.1 hingga 5.2.5
+AM4-B6,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,4,6,HUKUM LINEAR,6,6.1.1 hingga 6.3.1
+AM4-B7,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,4,7,GEOMETRI KOORDINAT,12,7.1.1 hingga 7.4.2
+AM4-B8,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,4,8,VEKTOR,10,8.1.1 hingga 8.3.4
+AM4-B9,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,4,9,PENYELESAIAN SEGI TIGA,12,9.1.1 hingga 9.4.1
+AM4-B10,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,4,10,NOMBOR INDEKS,5,10.1.1 hingga 10.2.2
+AM5-B1,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,5,1,SUKATAN MEMBULAT,8,1.1.1 hingga 1.4.1
+AM5-B2,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,5,2,PEMBEZAAN,16,2.1.1 hingga 2.4.9
+AM5-B3,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,5,3,PENGAMIRAN,11,3.1.1 hingga 3.4.2
+AM5-B4,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,5,4,PILIH ATUR DAN GABUNGAN,6,4.1.1 hingga 4.2.3
+AM5-B5,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,5,5,TABURAN KEBARANGKALIAN,14,5.1.1 hingga 5.3.5
+AM5-B6,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,5,6,FUNGSI TRIGONOMETRI,12,6.1.1 hingga 6.6.2
+AM5-B7,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,5,7,PENGATURCARAAN LINEAR,2,7.1.1 hingga 7.2.1
+AM5-B8,DSKP KSSM Matematik Tambahan Tingkatan 4 & 5,5,8,KINEMATIK GERAKAN LINEAR,8,8.1.1 hingga 8.4.1

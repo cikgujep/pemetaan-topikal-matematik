@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Tema bersama (Auto/Terang/Gelap) untuk Panduan, Peta Topikal dan Pembentangan. Kunci: pt-theme */
+(function(){var K='pt-theme',v='auto';function ap(x){var r=document.documentElement;if(x==='light'||x==='dark')r.setAttribute('data-theme',x);else r.removeAttribute('data-theme')}
+try{v=localStorage.getItem(K)||'auto'}catch(e){}ap(v);
+function tell(){try{document.dispatchEvent(new CustomEvent('pt-theme'))}catch(e){}}
+window.ptTheme={get:function(){return v},label:function(){return v==='light'?'Terang':v==='dark'?'Gelap':'Auto'},
+ set:function(n,quiet){v=n;try{localStorage.setItem(K,n)}catch(e){}ap(n);tell();if(!quiet){try{if(window.parent&&window.parent!==window)window.parent.postMessage({type:'pt-theme',v:n},'*')}catch(e){}}},
+ cycle:function(){this.set(v==='auto'?'light':v==='light'?'dark':'auto')}};
+window.addEventListener('message',function(e){if(e.data&&e.data.type==='pt-theme-set'){window.ptTheme.set(e.data.v,true)}});})();
+</script>
+<title>Rantaian Konsep T1 hingga T5</title>
+<style>
+/* Pembentangan rantaian konsep. Fail tunggal, tiada CDN. Biru = Matematik, jingga = Matematik Tambahan, hijau = DK2027. */
+:root{
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --bg:#eef3f9; --ink:#132030; --muted:#566576; --line:rgba(110,130,160,.30);
+  --surface:rgba(255,255,255,.60); --solid:rgba(250,252,255,.95); --glass-b:rgba(255,255,255,.8); --glass-s:0 10px 40px rgba(31,56,88,.14);
+  --m:#1d5f8f; --m-fill:rgba(29,95,143,.12); --am:#b04a10; --am-fill:rgba(176,74,16,.12); --dk:#0f7a5c; --dk-fill:rgba(15,122,92,.12);
+  --warn:#7a5200; --warn-fill:rgba(255,200,60,.22);
+  --grad:radial-gradient(1100px 700px at 5% -10%,rgba(56,132,214,.30),transparent 60%),radial-gradient(900px 600px at 100% 0%,rgba(240,140,70,.24),transparent 60%),radial-gradient(900px 700px at 50% 115%,rgba(120,90,220,.20),transparent 60%),#eef3f9;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#0a111d; --ink:#e9f0f7; --muted:#9fb0c2; --line:rgba(160,180,205,.22);
+  --surface:rgba(22,32,48,.55); --solid:rgba(16,24,37,.96); --glass-b:rgba(255,255,255,.10); --glass-s:0 10px 40px rgba(0,0,0,.5);
+  --m:#7cc0f0; --m-fill:rgba(124,192,240,.14); --am:#f6a874; --am-fill:rgba(246,168,116,.14); --dk:#66dcb0; --dk-fill:rgba(102,220,176,.14);
+  --warn:#f7d774; --warn-fill:rgba(247,215,116,.14);
+  --grad:radial-gradient(1100px 700px at 5% -10%,rgba(40,110,200,.38),transparent 60%),radial-gradient(900px 600px at 100% 0%,rgba(200,100,40,.28),transparent 60%),radial-gradient(900px 700px at 50% 115%,rgba(110,70,210,.28),transparent 60%),#0a111d;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0a111d; --ink:#e9f0f7; --muted:#9fb0c2; --line:rgba(160,180,205,.22);
+  --surface:rgba(22,32,48,.55); --solid:rgba(16,24,37,.96); --glass-b:rgba(255,255,255,.10); --glass-s:0 10px 40px rgba(0,0,0,.5);
+  --m:#7cc0f0; --m-fill:rgba(124,192,240,.14); --am:#f6a874; --am-fill:rgba(246,168,116,.14); --dk:#66dcb0; --dk-fill:rgba(102,220,176,.14);
+  --warn:#f7d774; --warn-fill:rgba(247,215,116,.14);
+  --grad:radial-gradient(1100px 700px at 5% -10%,rgba(40,110,200,.38),transparent 60%),radial-gradient(900px 600px at 100% 0%,rgba(200,100,40,.28),transparent 60%),radial-gradient(900px 700px at 50% 115%,rgba(110,70,210,.28),transparent 60%),#0a111d;
+  color-scheme:dark;
+}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--grad);background-attachment:fixed;color:var(--ink);font:15px/1.45 var(--font);overflow:hidden}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--m);outline-offset:2px}
+.glass{background:var(--surface);border:1px solid var(--glass-b);box-shadow:var(--glass-s);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%)}
+.app{display:grid;grid-template-rows:auto 1fr auto;height:100vh;gap:12px;padding:12px 16px}
+/* Bar atas */
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:10px 14px;border-radius:18px}
+.brand{font-weight:800;font-size:16px;letter-spacing:-.01em;margin-right:auto;white-space:nowrap}
+.brand span{background:linear-gradient(90deg,var(--m),var(--am));-webkit-background-clip:text;background-clip:text;color:transparent}
+.seg{display:inline-flex;padding:3px;border-radius:12px;background:color-mix(in srgb,var(--ink) 7%,transparent);gap:2px}
+.seg button{border:0;background:none;padding:6px 12px;border-radius:9px;cursor:pointer;color:var(--muted);font-weight:600;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--solid);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.pill{border:1px solid var(--glass-b);background:var(--surface);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:13px;white-space:nowrap}
+.pill[aria-pressed="true"]{background:linear-gradient(135deg,var(--m),color-mix(in srgb,var(--m) 60%,var(--am)));color:#fff;border-color:transparent}
+.tog{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;padding:5px 10px;border-radius:999px;border:1px solid var(--glass-b);background:var(--surface)}
+.tog input{width:16px;height:16px;margin:0;accent-color:var(--dk)}
+.ib{border:1px solid var(--glass-b);background:var(--surface);border-radius:10px;padding:6px 11px;cursor:pointer;font-weight:700}
+.ib:hover,.pill:hover{border-color:var(--m)}
+select.ib{font-weight:600;max-width:280px}
+.bidbar{display:flex;flex-wrap:wrap;gap:6px}
+/* Pentas */
+.stage{position:relative;min-height:0;overflow:auto;border-radius:22px;padding:22px 26px}
+.hid{display:none!important}
+/* Gambaran */
+.ovgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:16px}
+.ovb{border-radius:16px;padding:12px 14px;background:color-mix(in srgb,var(--surface) 70%,transparent);border:1px solid var(--line)}
+.ovb h3{margin:0 0 8px;font-size:15px;display:flex;justify-content:space-between;align-items:baseline}
+.ovb h3 small{color:var(--muted);font-weight:500}
+.ovhead,.ovrow{display:grid;grid-template-columns:minmax(150px,1fr) repeat(5,38px);gap:4px;align-items:center}
+.ovhead{font-size:11px;color:var(--muted);text-align:center;margin-bottom:2px}
+.ovhead span:first-child{text-align:left}
+.ovrow{width:100%;border:0;background:none;text-align:left;padding:4px 6px;border-radius:9px;cursor:pointer;color:var(--ink)}
+.ovrow:hover{background:color-mix(in srgb,var(--m) 12%,transparent)}
+.ovrow .nm{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ovrow .nm b{font-family:var(--mono);font-size:11.5px;margin-right:4px;color:var(--muted)}
+.dots{display:flex;gap:3px;justify-content:center;align-items:center;height:20px}
+.dot{width:12px;height:12px;border-radius:50%}
+.dot.m{background:var(--m)}
+.dot.am{background:var(--am);border-radius:3px;transform:rotate(45deg) scale(.85)}
+.dot.dk{background:none;border:2px solid var(--dk)}
+.dot.none{width:6px;height:6px;background:var(--line)}
+.flagmini{font-size:10px;font-weight:700;color:var(--warn);margin-left:4px}
+/* Slaid */
+.shead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 16px;margin-bottom:18px}
+.shead h2{margin:0;font-size:clamp(24px,3.2vw,40px);line-height:1.1;font-weight:800;letter-spacing:-.015em}
+.shead h2 .code{font-family:var(--mono);font-size:.55em;color:var(--muted);font-weight:700;display:block;margin-bottom:4px;letter-spacing:0}
+.meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.badge{font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;border:1px solid var(--line);background:var(--surface)}
+.badge.flag{border-color:color-mix(in srgb,var(--warn) 60%,transparent);background:var(--warn-fill);color:var(--warn)}
+.timeline{position:relative;display:grid;grid-template-columns:120px repeat(5,minmax(150px,1fr));gap:10px;align-items:stretch}
+.tcol-h{text-align:center;font-weight:800;font-size:15px;padding:8px 0;border-radius:12px;background:color-mix(in srgb,var(--ink) 6%,transparent);transition:opacity .35s ease}
+.tcol-h small{display:block;font-weight:500;color:var(--muted);font-size:11px}
+.lane-h{display:flex;flex-direction:column;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);padding-right:6px}
+.lane-h i{display:block;width:30px;height:4px;border-radius:2px;margin-top:6px}
+.lane-h.m i{background:var(--m)}.lane-h.am i{background:var(--am)}.lane-h.dk i{background:var(--dk)}
+.slot{position:relative;min-height:96px;border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:7px;transition:opacity .35s ease,transform .35s ease;
+  background:color-mix(in srgb,var(--surface) 50%,transparent);border:1px dashed var(--line)}
+.slot.na{background:repeating-linear-gradient(45deg,transparent 0 8px,color-mix(in srgb,var(--line) 60%,transparent) 8px 9px);border-style:solid;opacity:.55}
+.slot.gap{border:2px dashed color-mix(in srgb,var(--warn) 70%,transparent);background:var(--warn-fill)}
+.slot .gaplab{font-size:12px;font-weight:800;color:var(--warn);text-align:center;margin:auto}
+.slot.dim,.tcol-h.dim{opacity:.12;transform:scale(.98)}
+.node{all:unset;box-sizing:border-box;display:block;cursor:pointer;border-radius:12px;padding:8px 10px;border:1.5px solid var(--c);border-left-width:6px;background:var(--cf);
+  transition:transform .15s ease,box-shadow .15s ease;animation:pop .45s ease both}
+.node:hover,.node:focus-visible{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.node.m{--c:var(--m);--cf:var(--m-fill)}
+.node.am{--c:var(--am);--cf:var(--am-fill);border-left-style:double;border-left-width:7px}
+.node.dk{--c:var(--dk);--cf:var(--dk-fill);border-style:dashed;border-left-style:solid}
+.node.low{border-top-style:dashed;border-right-style:dashed;border-bottom-style:dashed}
+.node .id{font-family:var(--mono);font-size:11.5px;font-weight:800;color:var(--c)}
+.node .tt{font-size:13.5px;font-weight:600;line-height:1.3;margin-top:2px}
+.node .sub{font-size:11px;color:var(--muted);margin-top:4px;display:flex;flex-wrap:wrap;gap:4px 8px}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
+.flow{grid-column:2/-1;position:relative;height:26px;margin:-2px 0}
+.flow svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.note{margin-top:18px;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 18px}
+.note b{color:var(--ink)}
+.tag{display:inline-block;font-size:11px;font-weight:800;border:1.5px dashed var(--warn);color:var(--warn);background:var(--warn-fill);border-radius:5px;padding:0 5px;margin-right:4px}
+/* Laci butiran */
+.drawer{position:fixed;top:12px;right:12px;bottom:12px;width:min(520px,calc(100% - 24px));border-radius:20px;z-index:20;overflow:auto;padding:0 18px 22px;
+  background:var(--solid);border:1px solid var(--glass-b);box-shadow:-10px 0 50px rgba(0,0,0,.35);animation:slide .25s ease}
+@keyframes slide{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+.drawer header{position:sticky;top:0;background:var(--solid);padding:16px 0 10px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
+.drawer h3{margin:0;font-size:18px;flex:1}
+.drawer h3 .id{display:block;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.drawer h4{margin:16px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.drawer ol{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.drawer li{border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-size:13.5px}
+.drawer li .id{font-family:var(--mono);font-size:11.5px;font-weight:800;color:var(--muted);display:block}
+.drawer .kv{display:grid;grid-template-columns:110px 1fr;gap:4px 10px;font-size:13px}
+.drawer .kv dt{color:var(--muted)}.drawer .kv dd{margin:0}
+.lk{all:unset;cursor:pointer;display:block;border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:13px}
+.lk:hover{border-color:var(--m)}
+.lk .id{font-family:var(--mono);font-weight:800;font-size:12px}
+.lk small{color:var(--muted)}
+/* Bar bawah */
+.bottom{display:flex;align-items:center;gap:12px;padding:8px 14px;border-radius:16px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.prog{flex:1;min-width:120px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--ink) 10%,transparent);overflow:hidden}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--m),var(--am));transition:width .3s ease}
+.kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:4px;padding:0 4px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+@media (max-width:900px){
+  body{overflow:auto}.app{height:auto;min-height:100vh}
+  .timeline{grid-template-columns:1fr}.lane-h{display:none}.tcol-h{display:none}
+  .slot::before{content:attr(data-t);font-size:11px;font-weight:800;color:var(--muted)}
+  .flow{display:none}.ovgrid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<script type="application/json" id="data">__DATA__</script>
+<div class="app">
+  <div class="top glass" role="toolbar" aria-label="Kawalan pembentangan">
+    <div class="brand"><span>Rantaian Konsep</span> Tingkatan 1 hingga 5</div>
+    <div class="seg" role="group" aria-label="Mod"><button type="button" data-mode="ov" aria-pressed="true">Gambaran</button><button type="button" data-mode="sl" aria-pressed="false">Slaid</button></div>
+    <div class="bidbar" id="bidbar" role="group" aria-label="Bidang"></div>
+    <select class="ib" id="pick" aria-label="Pilih rantaian konsep"></select>
+    <label class="tog" for="t-dk"><input type="checkbox" id="t-dk"> DK2027</label>
+    <button class="ib" type="button" id="b-theme" title="Tema: Auto ikut sistem, Terang atau Gelap. Berlaku untuk seluruh sistem.">Tema</button>
+    <button class="ib" type="button" id="b-fs" title="Skrin penuh (F)">Skrin penuh</button>
+  </div>
+  <main class="stage glass" id="stage" aria-live="polite"></main>
+  <div class="bottom glass">
+    <button class="ib" type="button" id="b-prev" aria-label="Rantaian sebelum">&larr;</button>
+    <button class="ib" type="button" id="b-play" title="Dedah tingkatan satu demi satu (Space)">Mainkan T1 &rarr; T5</button>
+    <button class="ib" type="button" id="b-next" aria-label="Rantaian seterusnya">&rarr;</button>
+    <span id="count"></span>
+    <div class="prog" aria-hidden="true"><i id="progbar"></i></div>
+    <div class="legend"><span><i class="dot m"></i>Matematik</span><span><i class="dot am"></i>Matematik Tambahan</span><span><i class="dot dk"></i>DK2027</span>
+      <span><span class="kbd">&larr;</span><span class="kbd">&rarr;</span> rantaian</span><span><span class="kbd">Space</span> dedah</span><span><span class="kbd">O</span> gambaran</span></div>
+  </div>
+</div>
+<aside class="drawer hid" id="drawer" aria-label="Butiran"></aside>
+<script>
+const D=JSON.parse(document.getElementById('data').textContent);
+const COLS=['M1','M2','M3','M4','AM4','M5','AM5'], TT={M1:1,M2:2,M3:3,M4:4,AM4:4,M5:5,AM5:5};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const colOf=id=>id.split('-')[0], isAM=id=>colOf(id).charAt(0)==='A';
+const skOf=id=>{const m=/^(.*-B\d+)-SP(\d+\.\d+)\.\d+$/.exec(id);return m?m[1]+'-SK'+m[2]:null};
+const K={};D.kel.forEach(k=>K[k.id_sk]=k);
+const spBySk={};D.inv.forEach(p=>{const s=skOf(p.id_nod);(spBySk[s]=spBySk[s]||[]).push(p)});
+const spById={};D.inv.forEach(p=>spById[p.id_nod]=p);
+const L=D.pautan.filter(l=>spById[l.nod_sasaran]);
+const valid=l=>!!spById[l.nod_sumber];
+const inBy={},outBy={};
+L.forEach(l=>{const a=skOf(l.nod_sasaran);(inBy[a]=inBy[a]||[]).push(l);if(valid(l)){const b=skOf(l.nod_sumber);(outBy[b]=outBy[b]||[]).push(l)}});
+const DKST=(D.dk&&D.dk.st)||[], DKSP=(D.dk&&D.dk.sp)||[];
+const threads=D.mx.map((r,i)=>({i,kelompok:r.kelompok,rantaian:r.rantaian,code:r.rantaian.split(' ')[0],name:r.rantaian.replace(/^\S+\s/,''),bidang:r.bidang,cells:r.cells}));
+const bidangList=[];threads.forEach(t=>{if(!bidangList.includes(t.bidang))bidangList.push(t.bidang)});
+
+/* Penanda: takrif sama dengan peta_topikal.html (keputusan pengguna 25 Nov 2026) */
+const ANCHOR=['SAMBUNGAN','GENERALISASI','NOTASI'];
+threads.forEach(t=>{
+  const mine=new Set(COLS.flatMap(c=>t.cells[c]));
+  const mPrim=COLS.filter(c=>c[0]==='M').reduce((a,c)=>a+t.cells[c].length,0);
+  const anchors=L.filter(l=>mine.has(skOf(l.nod_sasaran))&&valid(l)&&!isAM(l.nod_sumber)&&l.kekuatan==='kuat'&&ANCHOR.includes(l.jenis));
+  t.mula=mPrim===0&&anchors.length===0;
+  const occ=[...new Set(COLS.filter(c=>t.cells[c].length).map(c=>TT[c]))].sort((a,b)=>a-b);
+  t.gaps=new Set();for(let i=0;i<occ.length-1;i++)for(let x=occ[i]+1;x<occ[i+1];x++)t.gaps.add(x);
+  t.occ=occ;
+});
+const dkFor=t=>DKST.filter(s=>s.rantaian_konsep.split(' ')[0]===t.code||(s.rantaian_sekunder||'').split(' ')[0]===t.code);
+
+const st={mode:'ov',bid:'',idx:0,reveal:5,dk:false};
+try{const s=JSON.parse(localStorage.getItem('pers-st')||'{}');if(typeof s.dk==='boolean')st.dk=s.dk}catch(e){}
+const list=()=>threads.filter(t=>!st.bid||t.bidang===st.bid);
+
+function bidbar(){
+  $('#bidbar').innerHTML=['',...bidangList].map(b=>'<button type="button" class="pill" data-bid="'+esc(b)+'" aria-pressed="'+(st.bid===b)+'">'+(b?esc(b):'Semua')+'</button>').join('');
+  const ls=list();
+  $('#pick').innerHTML=ls.map((t,i)=>'<option value="'+i+'"'+(i===st.idx?' selected':'')+'>'+esc(t.code+' '+t.name)+'</option>').join('');
+}
+function dotsFor(t,tt){
+  const m=COLS.filter(c=>TT[c]===tt&&c[0]==='M').reduce((a,c)=>a+t.cells[c].length,0);
+  const am=COLS.filter(c=>TT[c]===tt&&c[0]==='A').reduce((a,c)=>a+t.cells[c].length,0);
+  let h='';
+  if(m)h+='<i class="dot m" title="'+m+' SK Matematik"></i>';
+  if(am)h+='<i class="dot am" title="'+am+' SK Matematik Tambahan"></i>';
+  if(st.dk&&tt===1&&dkFor(t).length)h+='<i class="dot dk" title="DK2027"></i>';
+  return h||'<i class="dot none"></i>';
+}
+function renderOverview(){
+  const groups=(st.bid?[st.bid]:bidangList);
+  let h='<div class="ovgrid">';
+  groups.forEach(b=>{
+    const ts=threads.filter(t=>t.bidang===b);
+    h+='<section class="ovb"><h3>'+esc(b)+'<small>'+ts.length+' rantaian</small></h3><div class="ovhead"><span>Rantaian</span><span>T1</span><span>T2</span><span>T3</span><span>T4</span><span>T5</span></div>';
+    ts.forEach(t=>{
+      const li=list().indexOf(t);
+      h+='<button type="button" class="ovrow" data-go="'+t.i+'" title="'+esc(t.rantaian)+'"><span class="nm"><b>'+esc(t.code)+'</b>'+esc(t.name)+(t.mula?'<span class="flagmini">MULA BAHARU</span>':'')+(t.gaps.size?'<span class="flagmini">JEDA</span>':'')+'</span>'
+        +[1,2,3,4,5].map(x=>'<span class="dots">'+dotsFor(t,x)+'</span>').join('')+'</button>';
+    });
+    h+='</section>';
+  });
+  $('#stage').innerHTML=h+'</div>';
+  $('#count').textContent=list().length+' rantaian konsep';
+  $('#progbar').style.width='0%';
+}
+function nodeHTML(sk){
+  const k=K[sk]||{};const am=isAM(sk);
+  const n=(spBySk[sk]||[]).length, ni=(inBy[sk]||[]).length, no=(outBy[sk]||[]).length;
+  return '<button type="button" class="node '+(am?'am':'m')+(k.keyakinan==='rendah'?' low':'')+'" data-sk="'+esc(sk)+'"><span class="id">'+esc(sk)+'</span>'
+    +'<div class="tt">'+esc((k.standard_kandungan||'').replace(/^\d+\.\d+\s*/,''))+'</div>'
+    +'<div class="sub"><span>'+n+' SP</span>'+(k.peranan?'<span>'+esc(k.peranan)+'</span>':'')+(am&&ni?'<span>&larr; '+ni+' pautan</span>':'')+(!am&&no?'<span>&rarr; '+no+' pautan ke AM</span>':'')+'</div></button>';
+}
+function dkNodeHTML(s){
+  const n=DKSP.filter(p=>p.id_nod.startsWith(s.id_st.replace('-ST','-SP')+'.')).length;
+  const sec=s.rantaian_konsep.split(' ')[0]!==list()[st.idx].code;
+  return '<button type="button" class="node dk'+(s.keyakinan==='rendah'?' low':'')+'" data-dk="'+esc(s.id_st)+'"><span class="id">'+esc(s.id_st)+(sec?' (sekunder)':'')+'</span><div class="tt">'+esc(s.subtajuk.replace(/^\d+\.\d+\s*/,''))+'</div><div class="sub"><span>'+n+' SP</span><span>DK2027</span></div></button>';
+}
+function renderSlide(){
+  const ls=list();if(!ls.length){$('#stage').innerHTML='<p>Tiada rantaian.</p>';return}
+  st.idx=Math.max(0,Math.min(st.idx,ls.length-1));
+  const t=ls[st.idx];
+  const showDK=st.dk&&DKST.length;
+  const dks=showDK?dkFor(t):[];
+  let h='<div class="shead"><h2><span class="code">'+esc(t.code)+' &middot; '+esc(t.kelompok)+'</span>'+esc(t.name)+'</h2><div class="meta"><span class="badge">Bidang: '+esc(t.bidang)+'</span>'
+    +(t.mula?'<span class="badge flag">Mula baharu</span>':'')+(t.gaps.size?'<span class="badge flag">Jeda '+[...t.gaps].map(x=>'T'+x).join(', ')+'</span>':'')+'</div></div>';
+  h+='<div class="timeline">';
+  h+='<div></div>'+[1,2,3,4,5].map(x=>'<div class="tcol-h'+(x>st.reveal?' dim':'')+'">T'+x+'<small>Tingkatan '+x+'</small></div>').join('');
+  // Lorong Matematik
+  h+='<div class="lane-h m">Matematik<i></i></div>';
+  [1,2,3,4,5].forEach(x=>{
+    const c='M'+x;const nodes=t.cells[c];
+    const gap=t.gaps.has(x)&&!nodes.length&&!(x>=4&&t.cells['AM'+x].length);
+    h+='<div class="slot'+(gap?' gap':'')+(x>st.reveal?' dim':'')+'" data-t="T'+x+' Matematik">'+(nodes.length?nodes.map(nodeHTML).join(''):(gap?'<span class="gaplab">Jeda: tiada nod</span>':''))+'</div>';
+  });
+  h+='<div class="flow" id="flow"></div>';
+  // Lorong AM
+  h+='<div class="lane-h am">Matematik Tambahan<i></i></div>';
+  [1,2,3,4,5].forEach(x=>{
+    if(x<4){h+='<div class="slot na'+(x>st.reveal?' dim':'')+'" data-t="T'+x+' Matematik Tambahan" aria-hidden="true"></div>';return}
+    const nodes=t.cells['AM'+x];
+    h+='<div class="slot'+(x>st.reveal?' dim':'')+'" data-t="T'+x+' Matematik Tambahan">'+nodes.map(nodeHTML).join('')+'</div>';
+  });
+  if(showDK){
+    h+='<div class="lane-h dk">DK2027<i></i></div>';
+    [1,2,3,4,5].forEach(x=>{
+      if(x>1){h+='<div class="slot na'+(x>st.reveal?' dim':'')+'" data-t="T'+x+' DK2027" title="Dokumen belum tersedia"></div>';return}
+      h+='<div class="slot'+(x>st.reveal?' dim':'')+'" data-t="T1 DK2027">'+(dks.length?dks.map(dkNodeHTML).join(''):'<span class="gaplab" style="color:var(--muted)">Tiada subtajuk dipadankan</span>')+'</div>';
+    });
+  }
+  h+='</div>';
+  const nM=COLS.filter(c=>c[0]==='M').reduce((a,c)=>a+t.cells[c].length,0), nA=t.cells.AM4.length+t.cells.AM5.length;
+  const links=L.filter(l=>valid(l)&&COLS.some(c=>t.cells[c].includes(skOf(l.nod_sasaran))));
+  h+='<div class="note"><span><b>'+nM+'</b> SK Matematik</span><span><b>'+nA+'</b> SK Matematik Tambahan</span><span><b>'+links.length+'</b> pautan masuk ke SK AM rantaian ini</span>'
+    +(showDK?'<span><span class="tag">INFERENS</span>Padanan DK2027 ke rantaian belum disahkan guru. DK2027 hanya T1.</span>':'')
+    +'<span>Klik kad untuk butiran SP dan pautan.</span></div>';
+  $('#stage').innerHTML=h;
+  $('#count').textContent=(st.idx+1)+' / '+ls.length;
+  $('#progbar').style.width=((st.idx+1)/ls.length*100)+'%';
+  $('#pick').value=String(st.idx);
+  drawFlow(t);
+}
+/* Garis aliran antara tingkatan yang mempunyai nod (Matematik atau AM), garis putus-putus merentas Jeda */
+function drawFlow(t){
+  const f=$('#flow');if(!f)return;
+  const w=f.clientWidth;if(!w)return;
+  const colW=w/5, y=13;
+  let s='<svg viewBox="0 0 '+w+' 26" aria-hidden="true"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" style="stop-color:var(--m)"/><stop offset="1" style="stop-color:var(--am)"/></linearGradient></defs>';
+  const occ=t.occ.filter(x=>x<=st.reveal);
+  for(let i=0;i<occ.length-1;i++){
+    const a=occ[i],b=occ[i+1];const x1=(a-.5)*colW,x2=(b-.5)*colW;
+    s+='<line x1="'+x1+'" y1="'+y+'" x2="'+x2+'" y2="'+y+'" stroke="url(#g)" stroke-width="4" stroke-linecap="round"'+(b-a>1?' stroke-dasharray="2 9"':'')+'/>';
+  }
+  occ.forEach(x=>{s+='<circle cx="'+((x-.5)*colW)+'" cy="'+y+'" r="7" style="fill:var(--solid)" stroke="url(#g)" stroke-width="3"/>'});
+  f.innerHTML=s+'</svg>';
+}
+function openSK(sk){
+  const k=K[sk];if(!k)return;
+  const sps=spBySk[sk]||[], ins=inBy[sk]||[], outs=outBy[sk]||[];
+  let h='<header><h3><span class="id">'+esc(sk)+'</span>'+esc(k.standard_kandungan)+'</h3><button class="ib" type="button" data-close aria-label="Tutup">&times;</button></header>';
+  h+='<h4>Ringkasan</h4><dl class="kv"><dt>Bab</dt><dd>'+esc(k.bab_tajuk)+'</dd><dt>Rantaian</dt><dd>'+esc(k.rantaian_konsep)+'</dd><dt>Bidang</dt><dd>'+esc(k.bidang)+(k.bidang_dskp?' <small>(DSKP: '+esc(k.bidang_dskp)+')</small>':'')+'</dd><dt>Peranan</dt><dd>'+esc(k.peranan)+'</dd><dt>Kemahiran</dt><dd>'+esc(k.kemahiran_utama)+'</dd><dt>Keyakinan</dt><dd>'+esc(k.keyakinan)+'</dd>'+(k.catatan?'<dt>Catatan</dt><dd>'+esc(k.catatan)+'</dd>':'')+'</dl>';
+  h+='<h4>Standard Pembelajaran ('+sps.length+')</h4><ol>'+sps.map(p=>'<li><span class="id">'+esc(p.id_nod)+'</span>'+esc(p.standard_pembelajaran)+'</li>').join('')+'</ol>';
+  if(ins.length)h+='<h4>Pautan masuk daripada Matematik ('+ins.length+')</h4><ol>'+ins.map(l=>'<li><button type="button" class="lk" data-sk="'+esc(valid(l)?skOf(l.nod_sumber):'')+'"><span class="id">'+esc(l.nod_sumber)+' &rarr; '+esc(l.nod_sasaran)+'</span> <small>'+esc(l.jenis)+', '+esc(l.kekuatan)+', keyakinan '+esc(l.keyakinan)+'</small></button></li>').join('')+'</ol>';
+  if(outs.length)h+='<h4>Pautan keluar ke Matematik Tambahan ('+outs.length+')</h4><ol>'+outs.map(l=>'<li><button type="button" class="lk" data-sk="'+esc(skOf(l.nod_sasaran))+'"><span class="id">'+esc(l.nod_sumber)+' &rarr; '+esc(l.nod_sasaran)+'</span> <small>'+esc(l.jenis)+', '+esc(l.kekuatan)+', keyakinan '+esc(l.keyakinan)+'</small></button></li>').join('')+'</ol>';
+  showDrawer(h);
+}
+function openDK(id){
+  const s=DKST.find(x=>x.id_st===id);if(!s)return;
+  const sps=DKSP.filter(p=>p.id_nod.startsWith(s.id_st.replace('-ST','-SP')+'.'));
+  const set=new Set((s.padanan_sk||'').split(';').filter(Boolean));
+  const war=L.filter(l=>valid(l)&&set.has(skOf(l.nod_sumber)));
+  let h='<header><h3><span class="id">'+esc(s.id_st)+' &middot; DK2027</span>'+esc(s.subtajuk)+'</h3><button class="ib" type="button" data-close aria-label="Tutup">&times;</button></header>';
+  h+='<h4>Ringkasan</h4><dl class="kv"><dt>Bab</dt><dd>'+esc(s.bab_tajuk)+'</dd><dt>Bidang DK</dt><dd>'+esc(s.bidang_dk)+'</dd><dt>Rantaian</dt><dd>'+esc(s.rantaian_konsep)+(s.rantaian_sekunder?'<br><small>Sekunder: '+esc(s.rantaian_sekunder)+'</small>':'')+'</dd><dt>Padanan KSSM</dt><dd>'+esc(s.padanan_kssm)+'</dd><dt>Keyakinan</dt><dd>'+esc(s.keyakinan)+'</dd>'+(s.catatan?'<dt>Catatan</dt><dd>'+esc(s.catatan)+'</dd>':'')+'</dl>';
+  h+='<h4>Standard Pembelajaran ('+sps.length+')</h4><ol>'+sps.map(p=>'<li><span class="id">'+esc(p.id_nod)+'</span>'+esc(p.standard_pembelajaran)+'</li>').join('')+'</ol>';
+  h+='<h4><span class="tag">INFERENS</span>Pautan warisan ke AM ('+war.length+')</h4>'+(war.length?'<ol>'+war.map(l=>'<li><button type="button" class="lk" data-sk="'+esc(skOf(l.nod_sasaran))+'"><span class="id">'+esc(l.nod_sumber)+' &rarr; '+esc(l.nod_sasaran)+'</span> <small>'+esc(l.jenis)+', '+esc(l.kekuatan)+'</small></button></li>').join('')+'</ol>':'<p>Tiada.</p>')
+    +'<p style="font-size:12px;color:var(--muted)">Pautan ini milik SK KSSM yang dipadankan, dianggap terpakai kepada subtajuk DK2027. Belum dipetakan terus.</p>';
+  showDrawer(h);
+}
+let lastFocus=null;
+function showDrawer(h){lastFocus=document.activeElement;const d=$('#drawer');d.innerHTML=h;d.classList.remove('hid');d.scrollTop=0;d.querySelector('[data-close]').focus()}
+function closeDrawer(){$('#drawer').classList.add('hid');if(lastFocus)lastFocus.focus()}
+function render(){
+  bidbar();
+  document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===st.mode)));
+  $('#t-dk').checked=st.dk;
+  $('#pick').classList.toggle('hid',st.mode!=='sl');
+  st.mode==='ov'?renderOverview():renderSlide();
+  try{localStorage.setItem('pers-st',JSON.stringify({dk:st.dk}))}catch(e){}
+}
+function go(d){st.idx=(st.idx+d+list().length)%list().length;st.reveal=5;st.mode='sl';render()}
+let timer=null;
+function play(){
+  if(st.mode!=='sl'){st.mode='sl'}
+  clearInterval(timer);st.reveal=1;render();
+  timer=setInterval(()=>{st.reveal++;renderSlide();if(st.reveal>=5)clearInterval(timer)},1400);
+}
+document.addEventListener('click',e=>{
+  const m=e.target.closest('[data-mode]');if(m){st.mode=m.dataset.mode;st.reveal=5;render();return}
+  const b=e.target.closest('[data-bid]');if(b){st.bid=b.dataset.bid;st.idx=0;render();return}
+  const g=e.target.closest('[data-go]');if(g){const t=threads[+g.dataset.go];st.idx=Math.max(0,list().indexOf(t));st.mode='sl';st.reveal=5;render();return}
+  const c=e.target.closest('[data-close]');if(c){closeDrawer();return}
+  const s=e.target.closest('[data-sk]');if(s&&s.dataset.sk){openSK(s.dataset.sk);return}
+  const k=e.target.closest('[data-dk]');if(k){openDK(k.dataset.dk);return}
+});
+$('#pick').addEventListener('change',e=>{st.idx=+e.target.value;st.reveal=5;renderSlide()});
+$('#t-dk').addEventListener('change',e=>{st.dk=e.target.checked;render()});
+$('#b-prev').addEventListener('click',()=>go(-1));
+$('#b-next').addEventListener('click',()=>go(1));
+$('#b-play').addEventListener('click',play);
+const themeLbl=()=>{$('#b-theme').textContent='Tema: '+ptTheme.label()};themeLbl();
+$('#b-theme').addEventListener('click',()=>{ptTheme.cycle()});
+document.addEventListener('pt-theme',()=>{themeLbl();if(st.mode==='sl')drawFlow(list()[st.idx])});
+$('#b-fs').addEventListener('click',()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()});
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,select,textarea'))return;
+  if(e.key==='Escape'&&!$('#drawer').classList.contains('hid')){closeDrawer();return}
+  if(e.key==='ArrowRight'){e.preventDefault();go(1)}
+  else if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}
+  else if(e.key===' '){e.preventDefault();if(st.mode!=='sl'){st.mode='sl';st.reveal=0}clearInterval(timer);st.reveal=st.reveal>=5?1:st.reveal+1;render()}
+  else if(e.key==='o'||e.key==='O'){st.mode=st.mode==='ov'?'sl':'ov';st.reveal=5;render()}
+  else if(e.key==='f'||e.key==='F'){$('#b-fs').click()}
+});
+window.addEventListener('resize',()=>{if(st.mode==='sl')drawFlow(list()[st.idx])});
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Tema bersama (Auto/Terang/Gelap) untuk Panduan, Peta Topikal dan Pembentangan. Kunci: pt-theme */
+(function(){var K='pt-theme',v='auto';function ap(x){var r=document.documentElement;if(x==='light'||x==='dark')r.setAttribute('data-theme',x);else r.removeAttribute('data-theme')}
+try{v=localStorage.getItem(K)||'auto'}catch(e){}ap(v);
+function tell(){try{document.dispatchEvent(new CustomEvent('pt-theme'))}catch(e){}}
+window.ptTheme={get:function(){return v},label:function(){return v==='light'?'Terang':v==='dark'?'Gelap':'Auto'},
+ set:function(n,quiet){v=n;try{localStorage.setItem(K,n)}catch(e){}ap(n);tell();if(!quiet){try{if(window.parent&&window.parent!==window)window.parent.postMessage({type:'pt-theme',v:n},'*')}catch(e){}}},
+ cycle:function(){this.set(v==='auto'?'light':v==='light'?'dark':'auto')}};
+window.addEventListener('message',function(e){if(e.data&&e.data.type==='pt-theme-set'){window.ptTheme.set(e.data.v,true)}});})();
+</script>
+<title>Pemetaan Topikal Matematik</title>
+<style>
+/* Hab: Panduan, Peta Topikal dan Pembentangan dalam satu fail. Tiada CDN. */
+:root{
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --ink:#132030; --muted:#55657a; --line:rgba(110,130,160,.28);
+  --surface:rgba(255,255,255,.62); --solid:rgba(250,252,255,.96); --glass-b:rgba(255,255,255,.8); --glass-s:0 10px 40px rgba(31,56,88,.13);
+  --m:#1d5f8f; --am:#b04a10; --dk:#0f7a5c; --warn:#7a5200; --warn-fill:rgba(255,200,60,.22);
+  --grad:radial-gradient(1100px 700px at 5% -10%,rgba(56,132,214,.28),transparent 60%),radial-gradient(900px 600px at 100% 0%,rgba(240,140,70,.22),transparent 60%),radial-gradient(900px 700px at 50% 115%,rgba(120,90,220,.18),transparent 60%),#eef3f9;
+  --navh:64px; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#e9f0f7; --muted:#a0b1c3; --line:rgba(160,180,205,.22);
+    --surface:rgba(22,32,48,.58); --solid:rgba(16,24,37,.96); --glass-b:rgba(255,255,255,.10); --glass-s:0 10px 40px rgba(0,0,0,.5);
+    --m:#7cc0f0; --am:#f6a874; --dk:#66dcb0; --warn:#f7d774; --warn-fill:rgba(247,215,116,.14);
+    --grad:radial-gradient(1100px 700px at 5% -10%,rgba(40,110,200,.36),transparent 60%),radial-gradient(900px 600px at 100% 0%,rgba(200,100,40,.26),transparent 60%),radial-gradient(900px 700px at 50% 115%,rgba(110,70,210,.26),transparent 60%),#0a111d;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+    --ink:#e9f0f7; --muted:#a0b1c3; --line:rgba(160,180,205,.22);
+    --surface:rgba(22,32,48,.58); --solid:rgba(16,24,37,.96); --glass-b:rgba(255,255,255,.10); --glass-s:0 10px 40px rgba(0,0,0,.5);
+    --m:#7cc0f0; --am:#f6a874; --dk:#66dcb0; --warn:#f7d774; --warn-fill:rgba(247,215,116,.14);
+    --grad:radial-gradient(1100px 700px at 5% -10%,rgba(40,110,200,.36),transparent 60%),radial-gradient(900px 600px at 100% 0%,rgba(200,100,40,.26),transparent 60%),radial-gradient(900px 700px at 50% 115%,rgba(110,70,210,.26),transparent 60%),#0a111d;
+    color-scheme:dark;
+  }
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--grad);background-attachment:fixed;color:var(--ink);font:15.5px/1.6 var(--font);min-height:100vh}
+:focus-visible{outline:3px solid var(--m);outline-offset:2px}
+.glass{background:var(--surface);border:1px solid var(--glass-b);box-shadow:var(--glass-s);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%)}
+nav.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 16px;margin:0;border-radius:0 0 18px 18px;min-height:var(--navh)}
+.brand{font-weight:800;font-size:17px;letter-spacing:-.01em;margin-right:auto}
+.brand span{background:linear-gradient(90deg,var(--m),var(--am));-webkit-background-clip:text;background-clip:text;color:transparent}
+.seg{display:inline-flex;padding:4px;border-radius:14px;background:color-mix(in srgb,var(--ink) 7%,transparent);gap:3px}
+.seg a{text-decoration:none;color:var(--muted);font-weight:700;font-size:14px;padding:8px 16px;border-radius:10px}
+.seg button{border:0;background:none;color:var(--muted);font-weight:700;font-size:13px;padding:8px 12px;border-radius:10px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--solid);color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.14)}
+.seg a[aria-current="page"]{background:var(--solid);color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.14)}
+.view{display:none}.view.on{display:block}
+iframe{display:block;width:100%;height:calc(100vh - var(--navh) - 4px);border:0;background:transparent}
+/* Panduan */
+.doc{display:grid;grid-template-columns:240px minmax(0,1fr);gap:22px;max-width:1240px;margin:18px auto 60px;padding:0 18px}
+.toc{position:sticky;top:calc(var(--navh) + 16px);align-self:start;border-radius:18px;padding:14px 12px;max-height:calc(100vh - var(--navh) - 40px);overflow:auto}
+.toc b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 6px 6px}
+.toc a{display:block;text-decoration:none;color:var(--ink);font-size:13.5px;padding:5px 8px;border-radius:8px}
+.toc a:hover{background:color-mix(in srgb,var(--m) 12%,transparent)}
+article{min-width:0}
+.hero{border-radius:22px;padding:26px 28px;margin-bottom:18px}
+.hero h1{margin:0 0 6px;font-size:clamp(24px,3vw,36px);line-height:1.15;font-weight:800;letter-spacing:-.015em;background:linear-gradient(90deg,var(--m),color-mix(in srgb,var(--m) 50%,var(--am)) 55%,var(--am));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0;color:var(--muted);max-width:70ch}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:18px}
+.stat{border-radius:14px;padding:10px 14px;background:color-mix(in srgb,var(--solid) 55%,transparent);border:1px solid var(--line)}
+.stat b{display:block;font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat span{font-size:12px;color:var(--muted)}
+section.card{border-radius:20px;padding:22px 26px;margin-bottom:16px;scroll-margin-top:calc(var(--navh) + 14px)}
+section.card h2{margin:0 0 10px;font-size:21px;letter-spacing:-.01em}
+section.card h3{margin:18px 0 6px;font-size:16px}
+section.card p,section.card li{max-width:78ch}
+.idbox{display:flex;flex-wrap:wrap;gap:4px;align-items:stretch;margin:12px 0;font-family:var(--mono);font-size:clamp(16px,2.2vw,24px);font-weight:800}
+.idbox span{padding:8px 12px;border-radius:12px;border:1.5px solid var(--c);background:color-mix(in srgb,var(--c) 12%,transparent);display:flex;flex-direction:column;align-items:center}
+.idbox span small{font-family:var(--font);font-size:11.5px;font-weight:600;color:var(--muted);margin-top:2px}
+.idbox i{align-self:center;color:var(--muted);font-style:normal}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0}
+th,td{border-bottom:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+td code,p code,li code{font-family:var(--mono);font-size:.92em;background:color-mix(in srgb,var(--ink) 7%,transparent);padding:1px 5px;border-radius:5px}
+.tw{overflow-x:auto}
+.hier{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0}
+.hier div{border-radius:14px;padding:10px 14px;border:1px solid var(--line);background:color-mix(in srgb,var(--solid) 60%,transparent);text-align:center;min-width:110px}
+.hier div b{display:block;font-size:15px}
+.hier div small{color:var(--muted);font-size:12px}
+.hier i{font-style:normal;color:var(--muted);font-size:20px}
+.callout{border-radius:14px;padding:12px 16px;border:1.5px dashed color-mix(in srgb,var(--warn) 70%,transparent);background:var(--warn-fill);margin:12px 0}
+.tag{display:inline-block;font-size:11.5px;font-weight:800;border-radius:5px;padding:0 6px;margin-right:4px}
+.tag.d{border:1.5px solid var(--muted);color:var(--muted)}
+.tag.i{border:1.5px dashed var(--warn);color:var(--warn);background:var(--warn-fill)}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:10px}
+.kg{border-radius:14px;padding:10px 14px;border:1px solid var(--line);background:color-mix(in srgb,var(--solid) 50%,transparent)}
+.kg h4{margin:0 0 6px;font-size:14px}
+.kg ul{margin:0;padding-left:0;list-style:none;font-size:13.5px}
+.kg li{display:flex;gap:8px;justify-content:space-between;padding:2px 0;border-top:1px dashed var(--line)}
+.kg li code{flex:none}
+.kg li em{font-style:normal;color:var(--muted);font-size:12px;flex:none}
+.go{display:inline-block;text-decoration:none;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--m),color-mix(in srgb,var(--m) 60%,var(--am)));padding:9px 16px;border-radius:12px;margin:6px 8px 0 0}
+kbd{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;background:var(--solid)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:8px 0}
+.legend span{display:inline-flex;align-items:center;gap:6px;font-size:14px}
+.sw{width:26px;height:14px;border-radius:4px;border:1.5px solid var(--c);border-left-width:5px;background:color-mix(in srgb,var(--c) 14%,transparent)}
+@media (max-width:900px){.doc{grid-template-columns:1fr}.toc{position:static;max-height:none}}
+@media print{
+  body{background:#fff;color:#000}nav.top,.toc,.go{display:none!important}.view{display:block!important}#v-peta,#v-pers{display:none!important}
+  .glass,section.card,.hero{background:#fff;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:1px solid #999}
+  .hero h1{color:#000;background:none}.doc{grid-template-columns:1fr}section.card{break-inside:avoid}
+}
+
+/* ===== Kemasan Panduan: susun atur, aksen dan animasi halus ===== */
+.brand{display:flex;align-items:center;gap:10px;font-size:16px}
+.brand::before{content:"";width:30px;height:30px;border-radius:9px;flex:none;
+  background:conic-gradient(from 210deg,var(--m),color-mix(in srgb,var(--m) 40%,var(--am)),var(--am),var(--m));
+  box-shadow:0 4px 14px color-mix(in srgb,var(--m) 35%,transparent)}
+.brand span{font-weight:900}
+nav.top{margin:0 12px;border-radius:0 0 20px 20px}
+.readbar{position:fixed;left:0;top:0;height:3px;width:0;z-index:30;background:linear-gradient(90deg,var(--m),var(--am));transition:width .1s linear}
+.doc{grid-template-columns:250px minmax(0,1fr);gap:26px;max-width:1280px}
+.toc{padding:16px 12px}
+.toc a{position:relative;display:flex;align-items:center;gap:10px;padding:7px 10px;margin:1px 0;color:var(--muted);transition:background .2s ease,color .2s ease,transform .2s ease}
+.toc a .n{flex:none;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;font-size:11.5px;font-weight:800;
+  background:color-mix(in srgb,var(--ink) 7%,transparent);color:var(--muted);transition:all .25s ease}
+.toc a:hover{color:var(--ink);transform:translateX(2px)}
+.toc a.on{color:var(--ink);font-weight:700;background:color-mix(in srgb,var(--m) 13%,transparent)}
+.toc a.on .n{background:linear-gradient(135deg,var(--m),var(--am));color:#fff;box-shadow:0 3px 10px color-mix(in srgb,var(--m) 40%,transparent)}
+.hero{position:relative;overflow:hidden;padding:34px 34px 28px;isolation:isolate}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;filter:blur(40px);opacity:.5;z-index:-1;animation:float 16s ease-in-out infinite}
+.hero::before{width:320px;height:320px;right:-80px;top:-120px;background:color-mix(in srgb,var(--am) 55%,transparent)}
+.hero::after{width:280px;height:280px;left:-90px;bottom:-140px;background:color-mix(in srgb,var(--m) 55%,transparent);animation-delay:-8s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,20px) scale(1.12)}}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.hero .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--dk);box-shadow:0 0 0 4px color-mix(in srgb,var(--dk) 25%,transparent);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px color-mix(in srgb,var(--dk) 0%,transparent)}}
+.stats{gap:12px;margin-top:22px}
+.stat{position:relative;overflow:hidden;transition:transform .25s ease,box-shadow .25s ease}
+.stat::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--m),var(--am));transform:scaleX(.25);transform-origin:left;transition:transform .4s ease}
+.stat:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.12)}
+.stat:hover::after{transform:scaleX(1)}
+.stat b{font-size:28px}
+.go{transition:transform .2s ease,box-shadow .2s ease;box-shadow:0 6px 18px color-mix(in srgb,var(--m) 30%,transparent)}
+.go:hover{transform:translateY(-2px);box-shadow:0 10px 26px color-mix(in srgb,var(--m) 40%,transparent)}
+.go.alt{background:var(--solid);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+section.card{position:relative;padding:26px 30px 24px}
+section.card::before{content:"";position:absolute;left:0;top:28px;width:4px;height:32px;border-radius:0 4px 4px 0;background:linear-gradient(180deg,var(--m),var(--am))}
+section.card h2{display:flex;align-items:center;gap:12px;font-size:22px}
+section.card h2 .num{flex:none;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:15px;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,var(--m),var(--am));box-shadow:0 4px 14px color-mix(in srgb,var(--m) 35%,transparent)}
+section.card h3{display:flex;align-items:center;gap:8px}
+section.card h3::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--am);transform:rotate(45deg);flex:none}
+section.card ul{padding-left:20px}
+section.card li{margin:4px 0}
+section.card li::marker{color:var(--m)}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+.hier{gap:0;margin:16px 0 18px;align-items:stretch}
+.hier div{flex:1 1 120px;position:relative;padding:14px 12px;border-radius:16px;transition:transform .25s ease,box-shadow .25s ease;
+  background:linear-gradient(160deg,color-mix(in srgb,var(--lv) 18%,var(--solid)),color-mix(in srgb,var(--lv) 6%,var(--solid)));border:1px solid color-mix(in srgb,var(--lv) 35%,transparent)}
+.hier div:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(0,0,0,.14)}
+.hier div b{font-size:16px;color:color-mix(in srgb,var(--lv) 70%,var(--ink))}
+.hier div:nth-of-type(1){--lv:var(--m)}
+.hier div:nth-of-type(2){--lv:color-mix(in srgb,var(--m) 70%,var(--am))}
+.hier div:nth-of-type(3){--lv:color-mix(in srgb,var(--m) 45%,var(--am))}
+.hier div:nth-of-type(4){--lv:color-mix(in srgb,var(--m) 20%,var(--am))}
+.hier div:nth-of-type(5){--lv:var(--am)}
+.hier i{flex:0 0 34px;align-self:center;height:2px;font-size:0;position:relative;
+  background:repeating-linear-gradient(90deg,var(--muted) 0 6px,transparent 6px 11px);background-size:22px 2px;animation:flow 1.1s linear infinite;opacity:.7}
+.hier i::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:7px solid var(--muted)}
+@keyframes flow{to{background-position:22px 0}}
+.rv.in .hier div{animation:pop .5s ease both}
+.rv.in .hier div:nth-of-type(2){animation-delay:.08s}
+.rv.in .hier div:nth-of-type(3){animation-delay:.16s}
+.rv.in .hier div:nth-of-type(4){animation-delay:.24s}
+.rv.in .hier div:nth-of-type(5){animation-delay:.32s}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+.idbox span{transition:transform .2s ease}
+.idbox span:hover{transform:translateY(-3px)}
+.kgrid{gap:14px}
+.kg{transition:transform .25s ease,box-shadow .25s ease;border-radius:16px;padding:12px 16px}
+.kg:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(0,0,0,.12)}
+.kg li{align-items:baseline;padding:4px 0}
+.kg li code{font-weight:800}
+.rv.in .kg{animation:pop .45s ease both}
+table{border-radius:12px;overflow:hidden}
+tbody tr{transition:background .2s ease}
+tbody tr:hover{background:color-mix(in srgb,var(--m) 8%,transparent)}
+.callout{position:relative;padding-left:48px}
+.callout::before{content:"\0021";position:absolute;left:14px;top:13px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:13px;background:var(--warn);color:var(--solid)}
+.totop{position:fixed;right:18px;bottom:18px;z-index:15;width:44px;height:44px;border-radius:14px;border:1px solid var(--glass-b);background:var(--surface);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:var(--glass-s);color:var(--ink);font-size:18px;cursor:pointer;opacity:0;transform:translateY(12px);pointer-events:none;transition:all .3s ease}
+.totop.show{opacity:1;transform:none;pointer-events:auto}
+.view.on{animation:fadein .35s ease}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@media (max-width:900px){.hier i{flex-basis:18px}.hier div{flex-basis:44%}section.card{padding:20px}.doc{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+@media print{.readbar,.totop{display:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="readbar" id="readbar" aria-hidden="true"></div>
+<nav class="top glass" aria-label="Bahagian">
+  <div class="brand"><span>Pemetaan Topikal</span> Matematik dan Matematik Tambahan</div>
+  <div class="seg">
+    <a href="#panduan" data-v="panduan">Panduan</a>
+    <a href="#peta" data-v="peta">Peta Topikal</a>
+    <a href="#pembentangan" data-v="pembentangan">Pembentangan</a>
+  </div>
+  <div class="seg" role="group" aria-label="Tema untuk seluruh sistem">
+    <button type="button" data-th="auto" title="Ikut tetapan sistem peranti">Auto</button>
+    <button type="button" data-th="light">Terang</button>
+    <button type="button" data-th="dark">Gelap</button>
+  </div>
+</nav>
+
+<div class="view" id="v-panduan">
+<div class="doc">
+  <aside class="toc glass" aria-label="Kandungan panduan">
+    <b>Kandungan</b>
+    <a href="#p-tujuan">1. Tujuan</a>
+    <a href="#p-sumber">2. Sumber data</a>
+    <a href="#p-id">3. Membaca ID</a>
+    <a href="#p-hier">4. Bidang, kelompok, rantaian</a>
+    <a href="#p-k">5. Senarai kod K</a>
+    <a href="#p-pautan">6. Pautan dan jenis hubungan</a>
+    <a href="#p-penanda">7. Mula baharu dan Jeda</a>
+    <a href="#p-bidang">8. Bidang projek lawan DSKP</a>
+    <a href="#p-dk">9. DK2027</a>
+    <a href="#p-guna">10. Cara guna Peta Topikal</a>
+    <a href="#p-pers">11. Cara guna Pembentangan</a>
+    <a href="#p-had">12. Had dan risiko</a>
+    <a href="#p-glosari">13. Glosari</a>
+  </aside>
+  <article>
+    <header class="hero glass">
+      <div class="eyebrow">Alat guru &middot; KSSM dan DK2027</div>
+      <h1>Panduan Pemetaan Topikal</h1>
+      <p>Peta kebergantungan konsep antara Matematik Tingkatan 1 hingga 5 dan Matematik Tambahan Tingkatan 4 dan 5, supaya murid tidak melihat Matematik Tambahan sebagai subjek berasingan. Peta ini alat guru: setiap dapatan patut boleh diterjemah kepada tindakan bilik darjah.</p>
+      <div class="stats">
+        <div class="stat"><b>__S_SP__</b><span>Standard Pembelajaran (KSSM)</span></div>
+        <div class="stat"><b>__S_SK__</b><span>Standard Kandungan</span></div>
+        <div class="stat"><b>__S_KEL__</b><span>Kelompok</span></div>
+        <div class="stat"><b>__S_BEN__</b><span>Rantaian konsep</span></div>
+        <div class="stat"><b>__S_BID__</b><span>Bidang</span></div>
+        <div class="stat"><b>__S_PAU__</b><span>Pautan SP ke SP</span></div>
+        <div class="stat"><b>__S_DKSP__</b><span>SP DK2027 (T1)</span></div>
+      </div>
+      <a class="go" href="#peta">Buka Peta Topikal</a><a class="go alt" href="#pembentangan">Buka Pembentangan</a>
+    </header>
+
+    <section class="card glass" id="p-tujuan">
+      <h2>1. Tujuan</h2>
+      <p>Peta ini menjawab tiga soalan guru:</p>
+      <ul>
+        <li><b>Dari mana datangnya</b> sesuatu topik Matematik Tambahan dalam Matematik T1 hingga T5?</li>
+        <li><b>Di mana jurangnya</b>: tingkatan yang tiada kandungan sesuatu rantaian (Jeda), dan topik yang benar-benar baharu (Mula baharu)?</li>
+        <li><b>Apa tindakannya</b>: kemahiran mana yang perlu dihidupkan semula sebelum mengajar topik AM.</li>
+      </ul>
+    </section>
+
+    <section class="card glass" id="p-sumber">
+      <h2>2. Sumber data</h2>
+      <p>Satu-satunya sumber kandungan ialah dokumen rasmi: lima DSKP KSSM (Matematik T1, T2, T3, T4 dan 5, Matematik Tambahan T4 dan 5) dan Dokumen Kurikulum Matematik T1 (bermula 2027). Setiap tuntutan dalam peta dilabel:</p>
+      <ul>
+        <li><span class="tag d">DSKP</span> ada dalam dokumen kurikulum.</li>
+        <li><span class="tag i">INFERENS</span> rumusan projek, dengan sebab ringkas. Perlu disahkan guru sebelum dijadikan keputusan.</li>
+      </ul>
+      <p>Setiap SK dan pautan juga membawa tahap keyakinan: tinggi, sederhana atau rendah.</p>
+    </section>
+
+    <section class="card glass" id="p-id">
+      <h2>3. Membaca ID</h2>
+      <h3>ID daripada DSKP</h3>
+      <div class="idbox"><span style="--c:var(--m)">M1<small>Matematik T1</small></span><i>-</i><span style="--c:var(--m)">B2<small>Bab 2</small></span><i>-</i><span style="--c:var(--m)">SK2.1<small>Standard Kandungan</small></span></div>
+      <p><b>B ialah Bab, bukan Bidang.</b> ID Standard Pembelajaran menambah satu aras: <code>M1-B2-SP2.1.1</code>. Bagi Matematik Tambahan, awalan ialah <code>AM4</code> atau <code>AM5</code>. DSKP T4 dan T5 berkongsi nombor bab, jadi tingkatan wajib ada dalam ID.</p>
+      <h3>ID buatan projek</h3>
+      <div class="idbox"><span style="--c:var(--am)">K01<small>Kelompok</small></span><span style="--c:var(--am)">b<small>Rantaian</small></span></div>
+      <p>Kod K <b>bukan daripada DSKP</b>. Ia pengelompokan projek untuk menjejak konsep merentas tingkatan.</p>
+      <h3>ID DK2027</h3>
+      <div class="idbox"><span style="--c:var(--dk)">DK1<small>DK2027 T1</small></span><i>-</i><span style="--c:var(--dk)">B7<small>Bab 7</small></span><i>-</i><span style="--c:var(--dk)">ST7.3<small>Subtajuk</small></span></div>
+      <p>DK2027 tiada Standard Kandungan; <b>subtajuk</b> mengambil tempatnya. SP DK2027: <code>DK1-B7-SP7.3.3</code>.</p>
+    </section>
+
+    <section class="card glass" id="p-hier">
+      <h2>4. Bidang, kelompok dan rantaian</h2>
+      <div class="hier"><div><b>Bidang</b><small>__S_BID__ label</small></div><i>&rarr;</i><div><b>Kelompok</b><small>K01 hingga K15</small></div><i>&rarr;</i><div><b>Rantaian</b><small>K01b, __S_BEN__ semuanya</small></div><i>&rarr;</i><div><b>SK</b><small>M1-B2-SK2.1</small></div><i>&rarr;</i><div><b>SP</b><small>M1-B2-SP2.1.1</small></div></div>
+      <ul>
+        <li><b>Rantaian</b> ialah satu garis konsep yang dijejak dari T1 hingga T5. Satu rantaian mengandungi SK daripada pelbagai tingkatan dan kedua-dua mata pelajaran.</li>
+        <li>Istilah <b>rantaian konsep</b> menggantikan istilah kerja lama "benang" (25 Nov 2026) di semua tempat, termasuk lajur CSV <code>rantaian_konsep</code>.</li>
+        <li><b>Kelompok</b> mengumpul beberapa rantaian yang serumpun.</li>
+        <li><b>Bidang</b> ialah label pada aras rantaian. Bidang dan kelompok tidak bersarang dengan kemas: K11 (Vektor dalam Geometri, Matriks dalam Algebra) dan K15 (K15a dalam Algebra, selebihnya Kalkulus) merentas dua bidang.</li>
+        <li>Sesetengah SK juga mempunyai <b>kelompok sekunder</b>: kaitan tambahan pada aras kelompok, bukan rantaian.</li>
+      </ul>
+    </section>
+
+    <section class="card glass" id="p-k">
+      <h2>5. Senarai kod K</h2>
+      <p>Bilangan di sebelah kanan ialah bilangan SK dalam rantaian. Warna latar mengikut kelompok, bukan bidang.</p>
+      <div class="kgrid">__KTABLE__</div>
+    </section>
+
+    <section class="card glass" id="p-pautan">
+      <h2>6. Pautan dan jenis hubungan</h2>
+      <p>Pautan menghubungkan satu SP Matematik (sumber) kepada satu SP Matematik Tambahan (sasaran). <b>Sasaran sentiasa SP Matematik Tambahan</b>; pautan Matematik ke Matematik belum dipetakan.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Jenis</th><th>Maksud</th><th>Bilangan</th></tr></thead>
+        <tbody>
+          <tr><td><b>SAMBUNGAN</b></td><td>Konsep sama diteruskan</td><td>__J_SAMBUNGAN__</td></tr>
+          <tr><td><b>GENERALISASI</b></td><td>Kes khusus menjadi umum</td><td>__J_GENERALISASI__</td></tr>
+          <tr><td><b>ALAT</b></td><td>Kemahiran Matematik digunakan sebagai alat</td><td>__J_ALAT__</td></tr>
+          <tr><td><b>NOTASI</b></td><td>Konsep sama, simbol atau istilah bertukar</td><td>__J_NOTASI__</td></tr>
+          <tr><td><b>TIADA ANGKER</b></td><td>Topik benar-benar baharu, tiada sumber Matematik</td><td>__J_TIADA__</td></tr>
+        </tbody>
+      </table></div>
+      <p>Setiap pautan juga mempunyai <b>arah</b> (ke hadapan, serentak, balik), <b>kekuatan</b> (kuat, sederhana, lemah), jurang kedalaman, beza notasi, kemahiran proses, miskonsepsi yang diwarisi dan konflik masa.</p>
+    </section>
+
+    <section class="card glass" id="p-penanda">
+      <h2>7. Penanda Mula baharu dan Jeda</h2>
+      <p>Kedua-dua penanda dikira automatik daripada data, bukan ditulis tangan.</p>
+      <h3>Mula baharu (__M_MULA__ rantaian: __M_MULALIST__)</h3>
+      <p>Rantaian tanpa nod Matematik, <b>dan</b> tiada SP Matematik Tambahan dalamnya menerima pautan kuat jenis SAMBUNGAN, GENERALISASI atau NOTASI daripada SP Matematik. Pautan ALAT tidak dikira, kerana alat tidak menjadikan konsep itu biasa kepada murid.</p>
+      <h3>Jeda (__M_JEDA__ rantaian)</h3>
+      <p>Sekurang-kurangnya satu tingkatan kosong antara dua kemunculan rantaian. AM4 dikira T4 dan AM5 dikira T5. Setiap kad Jeda menunjukkan sama ada kemahiran itu masih digunakan dalam tingkatan yang kosong melalui pautan.</p>
+      <div class="callout"><b>Jeda bermaksud kekosongan dalam kurikulum, bukan bukti murid telah lupa.</b> Cadangan imbas kembali pada kad Jeda ialah templat <span class="tag i">INFERENS</span>, bukan pertimbangan per rantaian.</div>
+    </section>
+
+    <section class="card glass" id="p-bidang">
+      <h2>8. Bidang projek lawan bidang DSKP</h2>
+      <p>Lima daripada enam bidang projek (Algebra, Geometri, Kalkulus, Trigonometri, Statistik) ialah Bidang Pembelajaran rasmi DSKP <b>Matematik Tambahan</b>. "Pengurusan Kewangan" ialah nama projek. DSKP Matematik memakai lima bidang lain: Nombor dan Operasi, Perkaitan dan Algebra, Sukatan dan Geometri, Statistik dan Kebarangkalian, Matematik Diskret. Panel butiran memaparkan kedua-duanya.</p>
+      <h3>Prinsip penetapan bidang <span class="tag i">INFERENS</span></h3>
+      <p>Bidang rantaian ikut bidang DSKP Matematik Tambahan bagi konsep yang sama; jika konsep itu tiada dalam AM atau wujud pada aras yang berbeza secara asas, ikut kandungannya.</p>
+      <ul>
+        <li><b>K15a</b> Laju, pecutan, graf gerakan: Algebra. Tiada konsep had, terbitan atau kamiran.</li>
+        <li><b>K11b</b> Matriks: Algebra. Matriks tiada dalam DSKP AM; semua SP ialah operasi.</li>
+        <li><b>K13a hingga K13c</b> Set, Logik, Rangkaian: kekal Statistik atas keputusan pengguna. Ini pengecualian kepada prinsip; DSKP meletakkannya dalam Matematik Diskret.</li>
+      </ul>
+    </section>
+
+    <section class="card glass" id="p-dk">
+      <h2>9. DK2027: kurikulum baharu</h2>
+      <p>Dokumen Kurikulum Matematik T1 (bermula 2027) dipetakan sebagai lapisan pilihan: __S_DKST__ subtajuk dan __S_DKSP__ SP, semuanya disemak lawan imej PDF. Hidupkan suis <b>DK2027</b> untuk memaparkannya.</p>
+      <ul>
+        <li>Setiap subtajuk dipadankan ke rantaian sedia ada dan ke SK KSSM yang setara <span class="tag i">INFERENS</span>.</li>
+        <li><b>Pautan warisan</b>: pautan sedia ada daripada SK KSSM yang dipadankan, dianggap terpakai kepada subtajuk DK2027 <span class="tag i">INFERENS</span>.</li>
+        <li>Tidak dijumpai dalam DK2027 T1: Set, persamaan linear dua pemboleh ubah dan serentak, akas Teorem Pythagoras, serta bab Poligon dan bab Perimeter dan Luas (sebahagiannya diserap ke dalam Segi Tiga dan Sisi Empat).</li>
+        <li>Muncul dalam DK2027 T1: surd sebagai contoh nombor tak nisbah.</li>
+        <li>DK2027 T2 hingga T5 belum tersedia.</li>
+      </ul>
+    </section>
+
+    <section class="card glass" id="p-guna">
+      <h2>10. Cara guna Peta Topikal</h2>
+      <div class="legend"><span><i class="sw" style="--c:var(--m)"></i>Matematik</span><span><i class="sw" style="--c:var(--am);border-left-style:double;border-left-width:6px"></i>Matematik Tambahan</span><span><i class="sw" style="--c:var(--dk)"></i>DK2027</span><span><i class="sw" style="--c:var(--muted);border-style:dashed"></i>Keyakinan rendah</span></div>
+      <ol>
+        <li><b>Lorong topikal</b>: setiap baris satu rantaian, setiap lajur satu tingkatan (M1 hingga M5, AM4, AM5). Klik mana-mana chip SK untuk panel butiran: semua SP, catatan, bukti, pautan masuk dan keluar.</li>
+        <li><b>Prasyarat SP</b>: pilih SP Matematik Tambahan dan lihat prasyaratnya ke belakang hingga T1.</li>
+        <li><b>Mula baharu dan Jeda</b>: senarai rantaian berpenanda, nod sebelum dan selepas jeda, anotasi pautan dan cadangan tindakan.</li>
+      </ol>
+      <p>Penapis: butang bidang, carian teks, dan penapis lanjutan (kelompok, kemahiran, jenis hubungan, kekuatan, keyakinan, tingkatan). Jadual ringkasan di atas Lorong boleh diklik untuk menapis satu bidang dan satu tingkatan.</p>
+      <a class="go" href="#peta">Buka Peta Topikal</a>
+    </section>
+
+    <section class="card glass" id="p-pers">
+      <h2>11. Cara guna Pembentangan</h2>
+      <ul>
+        <li><b>Gambaran</b>: semua rantaian mengikut bidang, dengan titik bagi T1 hingga T5. Klik rantaian untuk slaidnya.</li>
+        <li><b>Slaid</b>: satu rantaian setiap slaid, garis masa T1 hingga T5 dalam lorong Matematik dan Matematik Tambahan. Klik kad untuk butiran.</li>
+        <li><kbd>&larr;</kbd> <kbd>&rarr;</kbd> tukar rantaian, <kbd>Space</kbd> dedah tingkatan satu demi satu, <kbd>O</kbd> gambaran, <kbd>F</kbd> skrin penuh, <kbd>Esc</kbd> tutup butiran. Klik dalam kawasan pembentangan dahulu supaya kekunci berfungsi.</li>
+      </ul>
+      <a class="go" href="#pembentangan">Buka Pembentangan</a>
+    </section>
+
+    <section class="card glass" id="p-had">
+      <h2>12. Had dan risiko</h2>
+      <ul>
+        <li><b>Data belum diaudit sepenuhnya</b>: __H_Y__ SP KSSM masih bertanda belum disemak lawan imej PDF, dan __H_LOW__ pautan berkeyakinan rendah.</li>
+        <li>Pautan hanya bersasaran Matematik Tambahan. Kesinambungan Matematik ke Matematik datang daripada keahlian rantaian, bukan pautan.</li>
+        <li>Kelompok, rantaian, nama bidang projek dan semua padanan DK2027 ialah <span class="tag i">INFERENS</span>. Kod K bukan istilah rasmi.</li>
+        <li>Mula baharu bergantung pada kualiti pautan; perubahan selepas audit pautan boleh mengubah senarainya.</li>
+      </ul>
+    </section>
+
+    <section class="card glass" id="p-glosari">
+      <h2>13. Glosari</h2>
+      <div class="tw"><table><tbody>
+        <tr><td><b>DSKP</b></td><td>Dokumen Standard Kurikulum dan Pentaksiran (KSSM)</td></tr>
+        <tr><td><b>DK2027</b></td><td>Dokumen Kurikulum Matematik bermula 2027</td></tr>
+        <tr><td><b>SK</b></td><td>Standard Kandungan</td></tr>
+        <tr><td><b>SP</b></td><td>Standard Pembelajaran</td></tr>
+        <tr><td><b>Subtajuk</b></td><td>Unit kandungan DK2027, setara SK</td></tr>
+        <tr><td><b>Rantaian</b></td><td>Garis konsep yang dijejak merentas tingkatan (projek)</td></tr>
+        <tr><td><b>Kelompok</b></td><td>Kumpulan rantaian serumpun (projek)</td></tr>
+        <tr><td><b>Peranan SK</b></td><td>PENGENALAN, PEMBINAAN, PENGUKUHAN atau LANJUTAN dalam rantaiannya</td></tr>
+        <tr><td><b>Nod primer / sekunder</b></td><td>SK yang dimiliki rantaian / SK yang berkait pada aras kelompok sahaja</td></tr>
+      </tbody></table></div>
+    </section>
+  </article>
+</div>
+</div>
+
+<div class="view" id="v-peta"><iframe id="f-peta" title="Peta Topikal" loading="lazy"></iframe></div>
+<div class="view" id="v-pembentangan"><iframe id="f-pembentangan" title="Pembentangan" allow="fullscreen" allowfullscreen loading="lazy"></iframe></div>
+
+<script type="text/plain" id="b64-peta">__B64_PETA__</script>
+<script type="text/plain" id="b64-pembentangan">__B64_PEMB__</script>
+<script>
+const dec=id=>{const b=atob(document.getElementById(id).textContent.trim());const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new TextDecoder('utf-8').decode(u)};
+const loaded={};
+function show(v){
+  if(!['panduan','peta','pembentangan'].includes(v))v='panduan';
+  document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));
+  document.querySelectorAll('[data-v]').forEach(a=>{if(a.dataset.v===v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  if(v!=='panduan'&&!loaded[v]){loaded[v]=true;document.getElementById('f-'+v).srcdoc=dec('b64-'+v)}
+  document.title=(v==='panduan'?'Panduan':v==='peta'?'Peta Topikal':'Pembentangan')+' | Pemetaan Topikal Matematik';
+}
+function route(){
+  let h=location.hash.slice(1);if(h==='persembahan')h='pembentangan';
+  if(h.startsWith('p-')){show('panduan');const el=document.getElementById(h);if(el)el.scrollIntoView();return}
+  show(h||'panduan');if(!h||['panduan','peta','pembentangan'].includes(h))window.scrollTo(0,0);
+}
+function syncTheme(){
+  const v=ptTheme.get();
+  document.querySelectorAll('[data-th]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.th===v)));
+  ['peta','pembentangan'].forEach(k=>{const f=document.getElementById('f-'+k);try{f.contentWindow&&f.contentWindow.postMessage({type:'pt-theme-set',v},'*')}catch(e){}});
+}
+document.querySelectorAll('[data-th]').forEach(b=>b.addEventListener('click',()=>ptTheme.set(b.dataset.th,true)));
+document.addEventListener('pt-theme',syncTheme);
+window.addEventListener('message',e=>{if(e.data&&e.data.type==='pt-theme'&&['auto','light','dark'].includes(e.data.v))ptTheme.set(e.data.v,true)});
+['peta','pembentangan'].forEach(k=>document.getElementById('f-'+k).addEventListener('load',syncTheme));
+syncTheme();
+window.addEventListener('hashchange',route);
+route();
+
+/* Kemasan Panduan: nombor bahagian, skrol muncul, penunjuk TOC, bar bacaan, kiraan naik */
+(function(){
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const vp=document.getElementById('v-panduan');
+  document.querySelectorAll('section.card h2').forEach(h=>{h.innerHTML=h.innerHTML.replace(/^(\d+)\.\s*/,'<span class="num">$1</span>')});
+  document.querySelectorAll('.toc a').forEach(a=>{a.innerHTML=a.innerHTML.replace(/^(\d+)\.\s*/,'<span class="n">$1</span>')});
+  const secs=[...vp.querySelectorAll('section.card, .hero')];
+  secs.forEach(s=>s.classList.add('rv'));
+  if('IntersectionObserver' in window&&!reduce){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.06});
+    secs.forEach(s=>io.observe(s));
+  }else secs.forEach(s=>s.classList.add('in'));
+  const tt=document.createElement('button');tt.className='totop';tt.type='button';tt.setAttribute('aria-label','Ke atas');tt.innerHTML='&uarr;';
+  tt.addEventListener('click',()=>scrollTo({top:0,behavior:reduce?'auto':'smooth'}));document.body.appendChild(tt);
+  const links=[...document.querySelectorAll('.toc a')];
+  const spy=()=>{
+    const on=vp.classList.contains('on');
+    let cur=null;const y=innerHeight*0.3;
+    vp.querySelectorAll('section.card').forEach(s=>{if(s.getBoundingClientRect().top<y)cur=s.id});
+    links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur));
+    const max=document.documentElement.scrollHeight-innerHeight;
+    document.getElementById('readbar').style.width=(on&&max>0?Math.min(100,scrollY/max*100):0)+'%';
+    tt.classList.toggle('show',on&&scrollY>600);
+  };
+  addEventListener('scroll',spy,{passive:true});addEventListener('hashchange',()=>setTimeout(spy,60));spy();
+  if(!reduce)document.querySelectorAll('.stat b').forEach(b=>{
+    const n=parseInt(b.textContent,10);if(!(n>0))return;const t0=performance.now(),dur=1100;
+    const step=now=>{const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3);b.textContent=String(Math.round(n*e));if(k<1)requestAnimationFrame(step)};
+    b.textContent='0';requestAnimationFrame(step);
+  });
+  links.forEach(a=>a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1),el=document.getElementById(id);if(el){e.preventDefault();history.replaceState(null,'','#'+id);el.scrollIntoView({behavior:reduce?'auto':'smooth'})}}));
+})();
+</script>
+</body>
+</html>

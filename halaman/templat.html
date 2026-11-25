@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Tema bersama (Auto/Terang/Gelap) untuk Panduan, Peta Topikal dan Pembentangan. Kunci: pt-theme */
+(function(){var K='pt-theme',v='auto';function ap(x){var r=document.documentElement;if(x==='light'||x==='dark')r.setAttribute('data-theme',x);else r.removeAttribute('data-theme')}
+try{v=localStorage.getItem(K)||'auto'}catch(e){}ap(v);
+function tell(){try{document.dispatchEvent(new CustomEvent('pt-theme'))}catch(e){}}
+window.ptTheme={get:function(){return v},label:function(){return v==='light'?'Terang':v==='dark'?'Gelap':'Auto'},
+ set:function(n,quiet){v=n;try{localStorage.setItem(K,n)}catch(e){}ap(n);tell();if(!quiet){try{if(window.parent&&window.parent!==window)window.parent.postMessage({type:'pt-theme',v:n},'*')}catch(e){}}},
+ cycle:function(){this.set(v==='auto'?'light':v==='light'?'dark':'auto')}};
+window.addEventListener('message',function(e){if(e.data&&e.data.type==='pt-theme-set'){window.ptTheme.set(e.data.v,true)}});})();
+</script>
+<title>Pemetaan Topikal Matematik</title>
+<style>
+/* Susun atur: bar status tetap, tab tiga paparan, jadual lorong dengan lajur tingkatan, laci butiran di sisi.
+   Dua warna sahaja: biru = Matematik, jingga = Matematik Tambahan. Amaran/status guna teks dan corak. */
+:root{
+  --bg:#f2f5f8; --surface:#ffffff; --ink:#14212d; --muted:#55636f; --line:#c8d1d9;
+  --m:#1d5f8f; --m-fill:#e1edf6; --am:#a34510; --am-fill:#fbe8da;
+  --warn:#6b4a00; --warn-fill:#fff1bd; --focus:#0b57d0;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --dh:34px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1720; --surface:#17222e; --ink:#e7eef5; --muted:#a0b0be; --line:#34434f;
+    --m:#74b6e8; --m-fill:#16304a; --am:#f2a574; --am-fill:#3a2416;
+    --warn:#f6d66b; --warn-fill:#3b3000; --focus:#8ab4f8; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1720; --surface:#17222e; --ink:#e7eef5; --muted:#a0b0be; --line:#34434f;
+  --m:#74b6e8; --m-fill:#16304a; --am:#f2a574; --am-fill:#3a2416;
+  --warn:#f6d66b; --warn-fill:#3b3000; --focus:#8ab4f8; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 var(--font)}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.draft{position:sticky;top:0;z-index:50;min-height:34px;background:var(--warn-fill);color:var(--warn);border-bottom:2px solid var(--warn);
+  padding:6px 16px;font-weight:700;letter-spacing:.02em;text-align:center;
+  background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(0,0,0,.06) 10px 20px)}
+.wrap{max-width:1500px;margin:0 auto;padding:12px 16px 40px}
+h1{font-size:20px;margin:6px 0 2px}
+.sub{color:var(--muted);margin:0 0 10px}
+.stats{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 10px;padding:0;list-style:none;font-variant-numeric:tabular-nums}
+.stats li b{font-size:15px}
+.nav{position:sticky;top:var(--dh);z-index:40;background:var(--bg);padding:6px 0 6px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:2px solid var(--line);margin-bottom:6px}
+.bidrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.bb{border:1.5px solid var(--line);background:var(--surface);border-radius:16px;padding:3px 10px;cursor:pointer;font-size:13px;white-space:nowrap}
+.bb:hover{border-color:var(--ink)}
+.bb small{color:var(--muted);font-variant-numeric:tabular-nums}
+.bb[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:700}
+.bb[aria-pressed="true"] small{color:var(--bg)}
+.bb[aria-pressed="true"]::before{content:"\2713 "}
+#f-q{flex:1;min-width:170px;padding:5px 9px;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink)}
+.active{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px;font-size:12px}
+.af{border:1px solid var(--ink);background:var(--surface);border-radius:4px;padding:1px 6px;cursor:pointer;font-size:12px}
+.af::after{content:" \00d7";font-weight:700}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;margin:0 0 8px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 12px;text-align:left;color:var(--ink)}
+.kpi b{display:block;font-size:20px;font-variant-numeric:tabular-nums;line-height:1.2}
+.kpi span{font-size:12px;color:var(--muted)}
+button.kpi{cursor:pointer;border:2px solid var(--warn);background:var(--warn-fill)}
+button.kpi span{color:var(--warn);font-weight:600}
+details.ov{background:var(--surface);border:1px solid var(--line);border-radius:8px;margin-bottom:10px}
+details.ov>summary{padding:7px 12px;cursor:pointer;font-weight:600}
+.ovwrap{overflow-x:auto;padding:0 12px 10px}
+table.ovt{border-collapse:collapse;min-width:560px;width:100%}
+.ovt th,.ovt td{border:1px solid var(--line);padding:3px 6px;text-align:center;font-size:12px}
+.ovt th:first-child{text-align:left}
+.hm{width:100%;border:0;background:color-mix(in srgb,var(--ink) calc(var(--v,0)*28%),transparent);color:var(--ink);cursor:pointer;padding:3px 0;font-weight:700;font-variant-numeric:tabular-nums;border-radius:3px}
+.hm:hover{outline:2px solid var(--ink)}
+.hm.z{font-weight:400;color:var(--muted);cursor:default}
+.ctl{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 6px;align-items:center}
+.gtoggle{background:none;border:0;cursor:pointer;font-weight:700;font-size:13px;padding:0;text-align:left}
+.chip.cur{outline:3px solid var(--ink);outline-offset:1px}
+.sibs{display:flex;flex-direction:column;gap:4px}
+.tab{background:none;border:0;border-bottom:4px solid transparent;padding:8px 12px;cursor:pointer;font-weight:600;color:var(--muted);margin-bottom:-2px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+details.filters{background:var(--surface);border:1px solid var(--line);border-radius:8px;margin-bottom:10px}
+details.filters>summary{padding:8px 12px;cursor:pointer;font-weight:600}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px 14px;padding:4px 12px 12px}
+.fgrid label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}
+.fgrid select,.fgrid input[type=search]{padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);min-width:0}
+.fgrid .chk{flex-direction:row;align-items:center;gap:6px;color:var(--ink);font-size:13px}
+.cols{display:flex;flex-wrap:wrap;gap:4px 10px}
+.cols label{flex-direction:row;align-items:center;gap:4px;color:var(--ink);font-size:13px}
+.fbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:0 12px 10px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:5px 10px;cursor:pointer}
+.btn:hover{border-color:var(--ink)}
+.count{color:var(--muted);font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin:0 0 8px;align-items:center}
+.sw{display:inline-block;width:26px;height:14px;border:1.5px solid var(--cb);border-left-width:5px;background:var(--cf);vertical-align:middle;margin-right:4px;border-radius:3px}
+.sw.m{--cb:var(--m);--cf:var(--m-fill)}
+.sw.am{--cb:var(--am);--cf:var(--am-fill);border-left-style:double;border-left-width:6px}
+.sw.low{border-top-style:dashed;border-right-style:dashed;border-bottom-style:dashed;border-width:2px;border-left-width:5px}
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+table.lorong{border-collapse:separate;border-spacing:0;min-width:1040px;width:100%}
+.lorong th,.lorong td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:5px;vertical-align:top;text-align:left}
+.lorong thead th{position:sticky;top:0;background:var(--surface);z-index:3;font-size:12px}
+.lorong thead th small{display:block;color:var(--muted);font-weight:400}
+.lorong th.rowh{position:sticky;left:0;background:var(--surface);z-index:2;min-width:178px;max-width:210px;font-weight:600;font-size:12.5px}
+.lorong thead th.rowh{z-index:4}
+.lorong tr.grp td{background:var(--bg);font-weight:700;font-size:13px;padding:6px 8px;position:static}
+.lorong tr.sec th.rowh{font-weight:400;color:var(--muted);font-style:italic}
+.cell{display:flex;flex-direction:column;gap:4px;min-width:118px}
+td.hatch{background-image:repeating-linear-gradient(45deg,transparent 0 6px,var(--line) 6px 7px)}
+.hatch .nil{font-size:11px;color:var(--muted);background:var(--surface);padding:1px 4px;border-radius:3px;align-self:flex-start}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;margin:2px 4px 0 0;border-radius:10px;border:1.5px solid var(--warn);background:var(--warn-fill);color:var(--warn)}
+.pill.mb{border-style:solid}
+.pill.jd{border-style:dashed}
+.chip{display:block;width:100%;text-align:left;border:1.5px solid var(--cb);border-left-width:5px;background:var(--cf);color:var(--ink);
+  padding:3px 6px;border-radius:5px;font-size:11.5px;line-height:1.3;cursor:pointer}
+.chip.m{--cb:var(--m);--cf:var(--m-fill)}
+.chip.am{--cb:var(--am);--cf:var(--am-fill);border-left-style:double;border-left-width:6px;
+  background-image:repeating-linear-gradient(135deg,transparent 0 7px,rgba(128,64,0,.10) 7px 8px)}
+.chip.low{border-top-style:dashed;border-right-style:dashed;border-bottom-style:dashed;border-top-width:2px;border-right-width:2px;border-bottom-width:2px}
+.chip:hover{filter:brightness(.96);box-shadow:0 0 0 2px var(--cb)}
+.chip .id{font-family:var(--mono);font-weight:700;display:block;font-size:11px}
+.chip .tt{overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.chip .tag{display:inline-block;font-size:10px;font-weight:700;border:1px solid var(--cb);border-radius:3px;padding:0 3px;margin-top:2px;background:var(--surface)}
+.chip.tgt{outline:3px solid var(--ink);outline-offset:1px}
+.chip.src{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--cb)}
+.chip.ctx{opacity:.82;border-style:dotted;border-left-style:solid}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0 0 10px;font-size:13px}
+.note b{font-weight:700}
+.tag-inf{display:inline-block;font-size:11px;font-weight:700;border:1.5px dashed var(--warn);color:var(--warn);background:var(--warn-fill);border-radius:4px;padding:0 5px;margin-right:4px}
+.tag-dat{display:inline-block;font-size:11px;font-weight:700;border:1.5px solid var(--muted);color:var(--muted);border-radius:4px;padding:0 5px;margin-right:4px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;break-inside:avoid}
+.card h3{margin:0 0 4px;font-size:14px}
+.card .row{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;margin:4px 0}
+.card .lab{font-size:11px;color:var(--muted);text-transform:none}
+.bd{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:4px;padding:0 5px;background:var(--bg);font-weight:600}
+.bd.low{border-style:dashed;border-width:2px}
+.lnk{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:1px 6px;font-family:var(--mono);font-size:11.5px;cursor:pointer}
+.lnk:hover{border-color:var(--ink)}
+.lcard{border:1px solid var(--line);border-radius:6px;padding:6px 8px;margin:6px 0;background:var(--bg)}
+.lcard summary{cursor:pointer}
+.lcard dl{margin:6px 0 0;display:grid;grid-template-columns:130px 1fr;gap:3px 8px;font-size:12.5px}
+.lcard dt{color:var(--muted)}
+.lcard dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}
+.spbox{border-top:1px solid var(--line);padding:8px 0}
+.spbox .txt{white-space:pre-wrap;overflow-wrap:anywhere}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:3px 8px;font-size:13px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}
+#panel{position:fixed;top:0;right:0;bottom:0;width:min(520px,100%);background:var(--surface);border-left:2px solid var(--ink);z-index:60;overflow-y:auto;padding:0 14px 30px;box-shadow:-6px 0 18px rgba(0,0,0,.18)}
+#panel[hidden]{display:none}
+.phead{position:sticky;top:0;background:var(--surface);padding:10px 0 8px;border-bottom:1px solid var(--line);z-index:2}
+.phead h2{font-size:15px;margin:0 0 2px;overflow-wrap:anywhere}
+.phead .acts{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+#panel h4{margin:14px 0 4px;font-size:13px}
+.sel{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.sel select{max-width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+table.chain{border-collapse:separate;border-spacing:0;min-width:1000px;width:100%}
+.chain th,.chain td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:5px;vertical-align:top;text-align:left}
+.chain thead th{background:var(--surface);font-size:12px}
+.chain th.rowh{position:sticky;left:0;background:var(--surface);min-width:150px;max-width:190px;font-size:12px;z-index:1}
+.tl-arrow{color:var(--muted);font-size:12px;margin:0 0 6px}
+.list{display:flex;flex-direction:column;gap:10px}
+.empty{color:var(--muted);padding:14px}
+.foot{margin-top:18px}
+.foot details{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-bottom:8px}
+.foot summary{cursor:pointer;font-weight:600}
+.foot ul{margin:6px 0 0;padding-left:18px}
+.hid{display:none!important}
+@media (max-width:640px){
+  .wrap{padding:8px 10px 30px}
+  #panel{width:100%;top:8vh;border-left:0;border-top:2px solid var(--ink);border-radius:12px 12px 0 0}
+  .kv,.lcard dl{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr}
+}
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  body{background:#fff;color:#000;font-size:10px}
+  .draft{position:static;border:2px solid #000;color:#000;background:#fff}
+  .nav,.tabs,details.filters,.acts,.btn,#panel .acts,.ctl,.active{display:none!important}
+  .tablewrap{overflow:visible;border:0}
+  table.lorong,table.chain{min-width:0}
+  .lorong thead th,.lorong th.rowh,.chain th.rowh{position:static}
+  .chip .tt{-webkit-line-clamp:unset;display:block;overflow:visible}
+  .chip{break-inside:avoid;font-size:9px}
+  tr{break-inside:avoid}
+  #panel{position:static;width:auto;box-shadow:none;border:1px solid #000;margin-top:12px;overflow:visible}
+  .phead{position:static}
+  .lcard>summary{list-style:none}
+  details>*{display:block}
+  .foot details{break-inside:avoid}
+}
+
+/* ===== Glassmorphism (CSS sendiri, tanpa CDN supaya halaman kekal berdiri sendiri) ===== */
+:root{
+  --dh:0px;
+  --surface:rgba(255,255,255,.58); --solid:rgba(250,252,255,.94);
+  --glass-b:rgba(255,255,255,.75); --glass-s:0 8px 32px rgba(31,56,88,.12);
+  --line:rgba(120,140,165,.28);
+  --bg:#eef3f9;
+  --grad:radial-gradient(1200px 700px at 8% -10%,rgba(56,132,214,.28),transparent 60%),
+         radial-gradient(900px 600px at 100% 0%,rgba(240,140,70,.22),transparent 60%),
+         radial-gradient(900px 700px at 50% 110%,rgba(120,90,220,.18),transparent 60%),#eef3f9;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --surface:rgba(22,32,46,.55); --solid:rgba(18,27,39,.95);
+    --glass-b:rgba(255,255,255,.10); --glass-s:0 8px 32px rgba(0,0,0,.45);
+    --line:rgba(160,180,205,.20); --bg:#0b1220;
+    --grad:radial-gradient(1200px 700px at 8% -10%,rgba(40,110,200,.35),transparent 60%),
+           radial-gradient(900px 600px at 100% 0%,rgba(200,100,40,.25),transparent 60%),
+           radial-gradient(900px 700px at 50% 110%,rgba(110,70,210,.25),transparent 60%),#0b1220;
+  }
+}
+:root[data-theme="dark"]{
+  --surface:rgba(22,32,46,.55); --solid:rgba(18,27,39,.95);
+  --glass-b:rgba(255,255,255,.10); --glass-s:0 8px 32px rgba(0,0,0,.45);
+  --line:rgba(160,180,205,.20); --bg:#0b1220;
+  --grad:radial-gradient(1200px 700px at 8% -10%,rgba(40,110,200,.35),transparent 60%),
+         radial-gradient(900px 600px at 100% 0%,rgba(200,100,40,.25),transparent 60%),
+         radial-gradient(900px 700px at 50% 110%,rgba(110,70,210,.25),transparent 60%),#0b1220;
+}
+body{background:var(--grad);background-attachment:fixed;min-height:100vh;font-size:14px;letter-spacing:.005em}
+.wrap{padding:22px 20px 48px}
+.hero{padding:22px 24px;margin:0 0 16px;border-radius:22px;background:var(--surface);border:1px solid var(--glass-b);
+  box-shadow:var(--glass-s);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%)}
+.hero h1{font-size:clamp(20px,2.6vw,30px);line-height:1.2;margin:0 0 6px;font-weight:800;letter-spacing:-.01em;
+  background:linear-gradient(90deg,var(--m),color-mix(in srgb,var(--m) 50%,var(--am)) 55%,var(--am));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{margin:0;font-size:14.5px}
+.kpis{gap:12px;margin:0 0 16px}
+.kpi,details.ov,details.filters,.tablewrap,.note,.card,.foot details{background:var(--surface);border:1px solid var(--glass-b);
+  box-shadow:var(--glass-s);-webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%)}
+.kpi{border-radius:16px;padding:12px 16px;transition:transform .15s ease,box-shadow .15s ease}
+.kpi b{font-size:24px;font-weight:800}
+button.kpi{border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);background:color-mix(in srgb,var(--warn-fill) 70%,transparent)}
+button.kpi:hover,.card:hover{transform:translateY(-2px)}
+details.ov,details.filters,.tablewrap,.note,.foot details{border-radius:16px}
+.card{border-radius:16px;padding:14px 16px;transition:transform .15s ease}
+.nav{top:0;padding:10px 14px;margin:0 0 14px;border:1px solid var(--glass-b);border-radius:18px;background:var(--surface);
+  box-shadow:var(--glass-s);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%)}
+.tabs{border-bottom:0;gap:6px;padding:4px;margin-bottom:10px;background:color-mix(in srgb,var(--ink) 6%,transparent);border-radius:14px;width:max-content;max-width:100%}
+.tab{border:0;border-radius:10px;padding:8px 14px;margin:0;transition:background .15s ease,color .15s ease}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--solid);color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.10)}
+.bb{border:1px solid var(--glass-b);background:var(--surface);border-radius:999px;padding:5px 12px;transition:all .15s ease}
+.bb:hover{border-color:var(--m)}
+.bb[aria-pressed="true"]{background:linear-gradient(135deg,var(--m),color-mix(in srgb,var(--m) 70%,var(--am)));color:#fff;border-color:transparent}
+.bb[aria-pressed="true"] small{color:rgba(255,255,255,.85)}
+#f-q{border:1px solid var(--glass-b);background:var(--surface);border-radius:999px;padding:8px 14px}
+.btn,.lnk,.af{border:1px solid var(--glass-b);background:var(--surface);border-radius:10px}
+.btn{padding:6px 12px}
+.btn:hover,.lnk:hover{border-color:var(--m)}
+.fgrid select,.fgrid input[type=search],.sel select{border:1px solid var(--glass-b);background:var(--solid);border-radius:10px}
+.lorong thead th,.lorong th.rowh,.chain thead th,.chain th.rowh,.phead{background:var(--solid)}
+.lorong tr.grp td{background:color-mix(in srgb,var(--m) 10%,var(--solid))}
+.hatch .nil{background:var(--solid)}
+.chip{border-radius:9px;transition:transform .12s ease,box-shadow .12s ease}
+.chip:hover{transform:translateY(-1px)}
+.lcard{background:color-mix(in srgb,var(--surface) 60%,transparent);border:1px solid var(--line);border-radius:12px}
+#panel{background:var(--surface);border-left:1px solid var(--glass-b);box-shadow:-10px 0 40px rgba(0,0,0,.22);
+  -webkit-backdrop-filter:blur(26px) saturate(170%);backdrop-filter:blur(26px) saturate(170%);border-radius:20px 0 0 20px}
+@media (max-width:640px){.wrap{padding:12px 12px 30px}.hero{padding:16px}#panel{border-radius:18px 18px 0 0}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  body{background:#fff}
+  .hero,.kpi,details.ov,details.filters,.tablewrap,.note,.card,.foot details,#panel{background:#fff;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:1px solid #000}
+  .hero h1{color:#000;background:none}
+  .lorong thead th,.lorong th.rowh,.chain th.rowh,.phead{background:#fff}
+}
+
+/* DK2027 */
+.dktog{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:700;
+  border:1px solid color-mix(in srgb,var(--dk) 55%,transparent);background:color-mix(in srgb,var(--dk) 12%,var(--surface));color:var(--ink)}
+.dktog small{font-weight:400;color:var(--muted)}
+.dktog input{accent-color:var(--dk);width:16px;height:16px;margin:0}
+th.dkh{background:color-mix(in srgb,var(--dk) 16%,var(--solid))!important}
+td.dkc{background:color-mix(in srgb,var(--dk) 6%,transparent)}
+.chip.dk{--cb:var(--dk);--cf:var(--dk-fill);border-left-style:solid;padding:0;cursor:default}
+.chip.dk>summary{list-style:none;cursor:pointer;padding:3px 6px}
+.chip.dk>summary::-webkit-details-marker{display:none}
+.chip.dk.dksec{border-style:dotted;border-left-style:solid;opacity:.9}
+.chip.dk .dkb{padding:4px 8px 6px;font-size:11.5px;border-top:1px dashed var(--cb)}
+.chip.dk .dkb ol{margin:4px 0 0;padding-left:0;list-style:none}
+.chip.dk .dkb li{margin:3px 0}
+.chip.dk .dkn{margin-top:3px;color:var(--muted)}
+:root{--dk:#0f7a5c;--dk-fill:#dcf3ea}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--dk:#5fd3a8;--dk-fill:#123a2e}}
+:root[data-theme="dark"]{--dk:#5fd3a8;--dk-fill:#123a2e}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero"><h1>Pemetaan Topikal Matematik dan Matematik Tambahan</h1>
+  <p class="sub">Paparan interaktif berdasarkan pemetaan Bidang, Standard Kandungan</p></header>
+  <section class="kpis" id="kpis" aria-label="Ringkasan"></section>
+
+  <div class="nav" id="nav">
+    <div class="tabs" role="tablist" aria-label="Paparan">
+      <button class="tab" role="tab" id="tab-lorong" data-tab="lorong" aria-selected="true">Lorong topikal</button>
+      <button class="tab" role="tab" id="tab-rantaian" data-tab="rantaian" aria-selected="false">Prasyarat SP</button>
+      <button class="tab" role="tab" id="tab-jeda" data-tab="jeda" aria-selected="false">Mula baharu dan Jeda</button>
+    </div>
+    <div class="bidrow" id="bidbar" role="group" aria-label="Bidang"></div>
+    <div class="bidrow" style="margin-top:6px"><label class="dktog" for="f-dk"><input type="checkbox" id="f-dk"> <span>DK2027</span><small>Kurikulum baharu T1</small></label><button class="btn" type="button" id="b-theme" title="Tema: Auto ikut sistem, Terang atau Gelap. Berlaku untuk seluruh sistem.">Tema</button><input type="search" id="f-q" placeholder="Cari id, tajuk, teks SP, catatan atau bukti" aria-label="Carian teks"></div>
+    <div class="active" id="active" aria-live="polite"></div>
+  </div>
+
+  <details class="filters" id="filters">
+    <summary>Penapis lanjutan</summary>
+    <div class="fgrid">
+      <label for="f-grp">Kumpul baris Lorong mengikut<select id="f-grp"><option value="bidang">Bidang</option><option value="kelompok">Kelompok</option></select></label>
+      <label for="f-kel">Kelompok<select id="f-kel"></select></label>
+      <label for="f-kem">Kemahiran<select id="f-kem"></select></label>
+      <label for="f-jenis">Jenis hubungan<select id="f-jenis"></select></label>
+      <label for="f-kuat">Kekuatan pautan<select id="f-kuat"></select></label>
+      <label for="f-conf">Keyakinan<select id="f-conf"></select></label>
+      <label for="f-bid" class="hid">Bidang<select id="f-bid"></select></label>
+      <div class="fgrid" style="padding:0;grid-column:1/-1">
+        <label class="chk" for="f-flag"><input type="checkbox" id="f-flag"> Mula baharu dan Jeda sahaja</label>
+      </div>
+      <fieldset style="border:0;padding:0;margin:0;grid-column:1/-1;min-width:0">
+        <legend style="font-size:12px;color:var(--muted);padding:0 0 3px">Tingkatan (lajur)</legend>
+        <div class="cols" id="f-cols"></div>
+      </fieldset>
+    </div>
+    <div class="fbar" style="font-size:12px;color:var(--muted)">
+      Jenis hubungan dan kekuatan menapis SK yang mempunyai sekurang-kurangnya satu pautan sepadan (Lorong), dan menapis pautan (Rantaian). Keyakinan menapis SK dalam Lorong dan pautan dalam Rantaian.
+    </div>
+    <div class="fbar"><button class="btn" data-reset type="button">Set semula semua penapis</button></div>
+  </details>
+
+  <main>
+    <section id="vLorong" aria-labelledby="tab-lorong"></section>
+    <section id="vRantaian" aria-labelledby="tab-rantaian" class="hid"></section>
+    <section id="vJeda" aria-labelledby="tab-jeda" class="hid"></section>
+  </main>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<aside id="panel" hidden aria-label="Panel butiran"></aside>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+"use strict";
+const D=JSON.parse(document.getElementById('data').textContent);
+const COLS=['M1','M2','M3','M4','AM4','M5','AM5'];
+const TT={M1:1,M2:2,M3:3,M4:4,AM4:4,M5:5,AM5:5};
+const COLSUB={M1:'Matematik T1',M2:'Matematik T2',M3:'Matematik T3',M4:'Matematik T4',AM4:'Mat. Tambahan T4',M5:'Matematik T5',AM5:'Mat. Tambahan T5'};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const colOf=id=>id.split('-')[0];
+const isAM=id=>colOf(id).charAt(0)==='A';
+const skOf=id=>{const m=/^(.*-B\d+)-SP(\d+\.\d+)\.\d+$/.exec(id);return m?m[1]+'-SK'+m[2]:null};
+
+/* ===== Indeks data ===== */
+const spById={}, spBySk={}, K={};
+D.inv.forEach(r=>{spById[r.id_nod]=r;const s=skOf(r.id_nod);(spBySk[s]=spBySk[s]||[]).push(r)});
+D.kel.forEach(r=>{K[r.id_sk]=r});
+const threads=D.mx.map((r,i)=>({i,kelompok:r.kelompok,rantaian:r.rantaian,bidang:r.bidang,cells:r.cells}));
+const bidangList=[];threads.forEach(t=>{if(!bidangList.includes(t.bidang))bidangList.push(t.bidang)});
+const skThread={};
+threads.forEach(t=>COLS.forEach(c=>t.cells[c].forEach(sk=>{skThread[sk]=t})));
+const kelompokList=[];threads.forEach(t=>{if(!kelompokList.includes(t.kelompok))kelompokList.push(t.kelompok)});
+const secByKel={};
+Object.values(K).forEach(k=>{if(k.kelompok_sekunder){(secByKel[k.kelompok_sekunder]=secByKel[k.kelompok_sekunder]||[]).push(k.id_sk)}});
+const L=D.pautan;
+const byTarget={}, inBySk={}, outBySk={};
+const lkValid=l=>!!spById[l.nod_sumber];
+L.forEach(l=>{
+  (byTarget[l.nod_sasaran]=byTarget[l.nod_sasaran]||[]).push(l);
+  const a=skOf(l.nod_sasaran);(inBySk[a]=inBySk[a]||[]).push(l);
+  if(lkValid(l)){const b=skOf(l.nod_sumber);(outBySk[b]=outBySk[b]||[]).push(l)}
+});
+const hay={};
+Object.keys(K).forEach(sk=>{
+  const k=K[sk];
+  let s=[sk,k.standard_kandungan,k.bab_tajuk,k.kelompok_utama,k.rantaian_konsep,k.kelompok_sekunder,k.kemahiran_utama,k.kemahiran_sekunder,k.peranan,k.bukti,k.catatan].join(' ');
+  (spBySk[sk]||[]).forEach(p=>{s+=' '+[p.id_nod,p.standard_pembelajaran,p.kata_kerja_sp,p.catatan].join(' ')});
+  hay[sk]=s.toLowerCase();
+});
+
+/* ===== Penanda rantaian (dikira daripada data) ===== */
+let flags=[];
+/* Mula baharu (takrif pautan, keputusan pengguna 25 Nov 2026): rantaian tanpa nod primer Matematik
+   DAN tiada SP Matematik Tambahan dalamnya menerima pautan kuat jenis SAMBUNGAN, GENERALISASI atau NOTASI
+   daripada SP Matematik. Pautan ALAT tidak dikira. */
+const ANCHOR_JENIS=['SAMBUNGAN','GENERALISASI','NOTASI'];
+/* Nota rantaian [INFERENS], keputusan pengguna 25 Nov 2026 */
+const RANTAIAN_NOTA={
+  K15a:'Bidang Algebra (ikut DSKP: Perkaitan dan Algebra). Rantaian ini ialah asas kinematik (AM5-B8) dan pengamiran (luas di bawah graf, AM5-B3) dalam konteks fizikal, bukan pengenalan pembezaan. Tiada konsep had, kadar seketika, terbitan atau kamiran.',
+  K11b:'Bidang Algebra (ikut DSKP: Perkaitan dan Algebra). Matriks tiada dalam DSKP Matematik Tambahan dan tiada pautan ke SP Matematik Tambahan; rantaian ini Matematik sahaja. Kaitan dengan AM ialah tatatanda: vektor lajur AM4-B8 menyerupai matriks lajur M5-B2, dan murid aliran AM melihat vektor (T4) sebelum matriks (T5).'
+};
+function computeFlags(){
+  flags=threads.map(t=>{
+    const mine=new Set(COLS.flatMap(c=>t.cells[c]));
+    const linksM=L.filter(l=>mine.has(skOf(l.nod_sasaran))&&lkValid(l)&&!isAM(l.nod_sumber));
+    const anchors=linksM.filter(l=>l.kekuatan==='kuat'&&ANCHOR_JENIS.includes(l.jenis));
+    let mPrim=0;const occ=new Set();const byT={};
+    COLS.forEach(c=>{const n=t.cells[c].length;if(n){occ.add(TT[c]);(byT[TT[c]]=byT[TT[c]]||[]).push(...t.cells[c]);if(c.charAt(0)==='M')mPrim+=n}});
+    const mulaStrict=mPrim===0;
+    const mula=mulaStrict&&anchors.length===0;
+    const anchorSrc=[...new Set(anchors.map(l=>l.nod_sumber))].sort();
+    const s=[...occ].sort((a,b)=>a-b);const gaps=[];
+    for(let i=0;i<s.length-1;i++){
+      if(s[i+1]-s[i]>=2){
+        const missing=[];for(let x=s[i]+1;x<s[i+1];x++)missing.push(x);
+        const after=byT[s[i+1]];
+        /* Anotasi (keputusan pengguna 25 Nov 2026): pautan ke rantaian ini daripada SP Matematik dalam tingkatan yang tiada. Tidak mengubah kiraan Jeda. */
+        const fill=linksM.filter(l=>missing.includes(TT[colOf(l.nod_sumber)]));
+        gaps.push({missing,label:'Jeda '+missing.map(x=>'T'+x).join(', '),before:byT[s[i]],after,tFrom:s[i],tTo:s[i+1],fill,afterAM:after.some(isAM)});
+      }
+    }
+    return {mula,mulaStrict,mPrim,anchorSrc,nLinksM:linksM.length,gaps,occ:s};
+  });
+}
+const isFlagged=t=>flags[t.i].mula||flags[t.i].gaps.length>0;
+
+/* ===== Keadaan penapis ===== */
+const st={bid:'',grp:'bidang',kel:'',kem:'',jenis:'',kuat:'',conf:'',q:'',flag:false,dk:false,col:new Set(COLS)};
+const anyChipFilter=()=>!!(st.q||st.kem||st.conf||st.jenis||st.kuat||st.col.size<7);
+function linkMatches(l){return (!st.jenis||l.jenis===st.jenis)&&(!st.kuat||l.kekuatan===st.kuat)}
+function skPass(sk){
+  const k=K[sk];if(!k)return false;
+  if(!st.col.has(colOf(sk)))return false;
+  if(st.bid&&k.bidang!==st.bid)return false;
+  if(st.kem&&k.kemahiran_utama!==st.kem&&k.kemahiran_sekunder!==st.kem)return false;
+  if(st.conf&&k.keyakinan!==st.conf)return false;
+  if(st.jenis||st.kuat){
+    const ls=(inBySk[sk]||[]).concat(outBySk[sk]||[]);
+    if(!ls.some(linkMatches))return false;
+  }
+  if(st.q){const h=hay[sk];for(const w of st.q.split(/\s+/)){if(w&&!h.includes(w))return false}}
+  return true;
+}
+const linkPass=l=>linkMatches(l)&&(!st.conf||l.keyakinan===st.conf);
+function rowVisible(t,ignoreFlag){
+  if(st.kel&&t.kelompok!==st.kel)return false;
+  if(st.bid&&t.bidang!==st.bid)return false;
+  if(st.flag&&!ignoreFlag&&!isFlagged(t))return false;
+  if(anyChipFilter()&&!COLS.some(c=>t.cells[c].some(skPass)))return false;
+  return true;
+}
+
+/* ===== Elemen kecil ===== */
+const collapsed=new Set();
+function chipHTML(sk,extra){
+  const k=K[sk];if(!k)return '';
+  const am=isAM(sk);const low=k.keyakinan==='rendah';
+  const role=extra==='cur'?'<span class="tag">SEMASA</span>':extra==='tgt'?'<span class="tag">SASARAN</span>':extra==='src'?'<span class="tag">SUMBER PAUTAN</span>':extra==='ctx'?'<span class="tag">RANTAIAN</span>':'';
+  return '<button type="button" class="chip '+(am?'am':'m')+(low?' low':'')+(extra?' '+extra:'')+'" data-sk="'+esc(sk)+'" title="'+esc(sk+' '+k.standard_kandungan+' | '+k.bab_tajuk+' | keyakinan '+k.keyakinan)+'">'
+    +'<span class="id">'+esc(sk)+'</span><span class="tt">'+esc(k.standard_kandungan)+'</span>'
+    +(low?'<span class="tag">keyakinan rendah</span>':'')+role+'</button>';
+}
+const cBadge=c=>'<span class="bd'+(c==='rendah'?' low':'')+'">keyakinan '+esc(c)+'</span>';
+function pills(t){
+  const f=flags[t.i];let h='';
+  if(f.mula)h+='<span class="pill mb">Mula baharu</span>';
+  f.gaps.forEach(g=>{h+='<span class="pill jd">'+esc(g.label)+'</span>'});
+  return h;
+}
+function fillSelect(el,first,vals){
+  el.innerHTML='<option value="">'+esc(first)+'</option>'+vals.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join('');
+}
+
+/* ===== Paparan 1: Lorong ===== */
+/* ===== DK2027 (kurikulum baharu T1), lapisan pilihan; tidak mempengaruhi penanda Mula baharu dan Jeda ===== */
+const DKST=(D.dk&&D.dk.st)||[], DKSP=(D.dk&&D.dk.sp)||[];
+/* Pautan warisan [INFERENS]: pautan sedia ada daripada SK KSSM yang dipadankan, dianggap terpakai kepada subtajuk DK2027 */
+function dkWarisLinks(s){
+  const set=new Set((s.padanan_sk||'').split(';').filter(Boolean));
+  return L.filter(l=>lkValid(l)&&set.has(skOf(l.nod_sumber)));
+}
+function dkWaris(s){
+  const ls=dkWarisLinks(s);
+  if(!ls.length)return '<div><b>Pautan ke AM:</b> tiada pautan warisan</div>';
+  const tg=[...new Set(ls.map(l=>skOf(l.nod_sasaran)))].sort();
+  return '<div><span class="tag-inf">[INFERENS]</span><b>Pautan warisan ke AM:</b> '+ls.length+' pautan daripada SK KSSM yang dipadankan, ke '+tg.map(x=>esc(x)).join(', ')+'</div>';
+}
+function dkCell(t){
+  const b=t.rantaian.split(' ')[0];
+  const q=(st.q||'').toLowerCase();
+  return DKST.filter(s=>s.rantaian_konsep.split(' ')[0]===b||(s.rantaian_sekunder&&s.rantaian_sekunder.split(' ')[0]===b)).filter(s=>{
+    if(!q)return true;
+    return (s.id_st+' '+s.subtajuk+' '+s.catatan+' '+DKSP.filter(p=>p.id_nod.startsWith(s.id_st.replace('-ST','-SP')+'.')).map(p=>p.standard_pembelajaran).join(' ')).toLowerCase().includes(q);
+  }).map(s=>{
+    const sec=s.rantaian_konsep.split(' ')[0]!==b;
+    const sps=DKSP.filter(p=>p.id_nod.startsWith(s.id_st.replace('-ST','-SP')+'.'));
+    return '<details class="chip dk'+(sec?' dksec':'')+(s.keyakinan==='rendah'?' low':'')+'"><summary><span class="id">'+esc(s.id_st)+(sec?' (sekunder)':'')+'</span><span class="tt">'+esc(s.subtajuk.replace(/^\d+\.\d+\s*/,''))+'</span></summary>'
+      +'<div class="dkb"><div><b>Bidang DK:</b> '+esc(s.bidang_dk)+'</div><div><b>Padanan KSSM:</b> '+esc(s.padanan_kssm)+'</div>'+dkWaris(s)+'<div><b>Keyakinan:</b> '+esc(s.keyakinan)+'</div>'
+      +(s.catatan?'<div class="dkn">'+esc(s.catatan)+'</div>':'')
+      +'<ol>'+sps.map(p=>'<li><span class="id">'+esc(p.id_nod.split('-SP')[1])+'</span> '+esc(p.standard_pembelajaran)+'</li>').join('')+'</ol></div></details>';
+  }).join('');
+}
+function renderLorong(){
+  let h='<div class="legend"><span><span class="sw m"></span>Matematik (T1 hingga T5)</span><span><span class="sw am"></span>Matematik Tambahan (sempadan berganda, corak garis)</span><span><span class="sw m low"></span>Keyakinan rendah (sempadan putus-putus dan teks)</span>'
+    +'<span><span class="pill mb">Mula baharu</span> tiada nod Matematik dan tiada pautan kuat bukan-ALAT daripada Matematik</span><span><span class="pill jd">Jeda T2, T3</span> tingkatan tiada nod (sel berjalur)</span></div>'
+    +'<p class="note" style="font-size:12px">Label Jeda hanya menyatakan kekosongan dalam kurikulum, bukan bahawa murid telah lupa. AM4 dikira T4 dan AM5 dikira T5. Penanda dikira daripada keseluruhan data, bukan hasil penapis.</p>';
+  h+=overviewHTML();
+  h+='<div class="ctl"><button class="btn" type="button" data-gall="1">Lipat semua kumpulan</button><button class="btn" type="button" data-gall="0">Buka semua kumpulan</button></div>';
+  const vis=COLS.filter(c=>st.col.has(c));
+  const showDK=st.dk&&DKST.length&&vis.includes('M1');
+  h+='<div class="tablewrap"><table class="lorong"><thead><tr><th class="rowh">Rantaian konsep</th>'+vis.map(c=>'<th scope="col">'+c+'<small>'+COLSUB[c]+'</small></th>'+(showDK&&c==='M1'?'<th scope="col" class="dkh">M1 DK2027<small>Kurikulum baharu (bermula 2027)</small></th>':'')).join('')+'</tr></thead><tbody>';
+  let nRows=0,nChips=0,nGrp=0;const seen=new Set();
+  const byBid=st.grp==='bidang';
+  (byBid?bidangList:kelompokList).forEach(g=>{
+    const rows=threads.filter(t=>(byBid?t.bidang:t.kelompok)===g&&rowVisible(t));
+    let secChips=[];
+    if(!st.flag&&!byBid&&(!st.kel||st.kel===g)){secChips=(secByKel[g]||[]).filter(skPass)}
+    if(!rows.length&&!secChips.length)return;
+    nGrp++;
+    const gk=st.grp+':'+g, isC=collapsed.has(gk);
+    h+='<tr class="grp"><td colspan="'+(vis.length+1+(showDK?1:0))+'"><button type="button" class="gtoggle" data-gt="'+esc(gk)+'" aria-expanded="'+(!isC)+'">'+(isC?'\u25B8 ':'\u25BE ')+(byBid?'Bidang: ':'')+esc(g)+' ('+rows.length+' rantaian'+(isC?', dilipat':'')+')</button></td></tr>';
+    if(isC){return}
+    rows.forEach(t=>{
+      nRows++;
+      const f=flags[t.i];
+      const miss=new Set();f.gaps.forEach(x=>x.missing.forEach(m=>miss.add(m)));
+      h+='<tr><th scope="row" class="rowh">'+esc(t.rantaian)+'<div class="lab" style="font-weight:400">'+(byBid?esc(t.kelompok):'Bidang: '+esc(t.bidang))+'</div><div>'+pills(t)+'</div></th>';
+      vis.forEach(c=>{
+        const chips=t.cells[c].filter(skPass);
+        chips.forEach(sk=>seen.add(sk));nChips+=chips.length;
+        const hatch=miss.has(TT[c])&&!t.cells[c].length;
+        h+='<td'+(hatch?' class="hatch"':'')+'><div class="cell">'+(hatch?'<span class="nil">tiada nod</span>':'')+chips.map(sk=>chipHTML(sk)).join('')+'</div></td>';
+        if(showDK&&c==='M1')h+='<td class="dkc"><div class="cell">'+dkCell(t)+'</div></td>';
+      });
+      h+='</tr>';
+    });
+    if(secChips.length){
+      h+='<tr class="sec"><th scope="row" class="rowh">Nod sekunder aras kelompok (tidak dipadankan ke rantaian)</th>';
+      vis.forEach(c=>{
+        const chips=secChips.filter(sk=>colOf(sk)===c);chips.forEach(sk=>seen.add(sk));nChips+=chips.length;
+        h+='<td><div class="cell">'+chips.map(sk=>chipHTML(sk)).join('')+'</div></td>';
+        if(showDK&&c==='M1')h+='<td class="dkc"></td>';
+      });
+      h+='</tr>';
+    }
+  });
+  h+='</tbody></table></div>';
+  if(!nGrp)h='<p class="empty">Tiada rantaian atau SK sepadan dengan penapis semasa.</p>';
+  $('#vLorong').innerHTML=h;
+  $('#f-count').textContent=seen.size+' SK dipaparkan daripada '+Object.keys(K).length+'; '+nRows+' rantaian daripada '+threads.length+'.';
+}
+
+function overviewHTML(){
+  const cnt=b=>COLS.map(c=>threads.filter(t=>t.bidang===b).reduce((a,t)=>a+t.cells[c].length,0));
+  let mx=1;const data=bidangList.map(b=>{const r=cnt(b);r.forEach(x=>{if(x>mx)mx=x});return {b,r}});
+  let h='<details class="ov" open><summary>Ringkasan: bilangan SK mengikut bidang dan tingkatan (klik sel untuk menapis)</summary><div class="ovwrap"><table class="ovt"><thead><tr><th>Bidang</th>'+COLS.map(c=>'<th>'+c+'</th>').join('')+'<th>Jumlah SK</th><th>Rantaian</th></tr></thead><tbody>';
+  data.forEach(d=>{
+    const nb=threads.filter(t=>t.bidang===d.b).length;
+    h+='<tr><th scope="row"><button type="button" class="bb" data-bid="'+esc(d.b)+'" aria-pressed="'+(st.bid===d.b)+'">'+esc(d.b)+'</button></th>'
+      +d.r.map((x,i)=>x?'<td><button type="button" class="hm" style="--v:'+(x/mx).toFixed(2)+'" data-bid="'+esc(d.b)+'" data-hc="'+COLS[i]+'" title="'+esc(d.b+' '+COLS[i]+': '+x+' SK')+'">'+x+'</button></td>':'<td><span class="hm z">0</span></td>').join('')
+      +'<td><b>'+d.r.reduce((a,b)=>a+b,0)+'</b></td><td>'+nb+'</td></tr>';
+  });
+  return h+'</tbody></table></div></details>';
+}
+function renderKPIs(){
+  const mb=flags.filter(f=>f.mula).length, jd=flags.filter(f=>f.gaps.length).length;
+  $('#kpis').innerHTML='<div class="kpi"><b>'+D.inv.length+'</b><span>SP</span></div><div class="kpi"><b>'+Object.keys(K).length+'</b><span>SK (nod)</span></div>'
+    +'<div class="kpi"><b>'+threads.length+'</b><span>rantaian dalam '+bidangList.length+' bidang, '+kelompokList.length+' kelompok</span></div><div class="kpi"><b>'+L.length+'</b><span>pautan</span></div>'
+    +'<button type="button" class="kpi" data-kpi="mula"><b>'+mb+'</b><span>Mula baharu, lihat senarai</span></button>'
+    +'<button type="button" class="kpi" data-kpi="jeda"><b>'+jd+'</b><span>rantaian berjeda, lihat senarai</span></button>';
+}
+function renderBidBar(){
+  $('#bidbar').innerHTML='<button type="button" class="bb" data-bid="" aria-pressed="'+(!st.bid)+'">Semua bidang <small>'+threads.length+'</small></button>'
+    +bidangList.map(b=>'<button type="button" class="bb" data-bid="'+esc(b)+'" aria-pressed="'+(st.bid===b)+'">'+esc(b)+' <small>'+threads.filter(t=>t.bidang===b).length+'</small></button>').join('');
+}
+function renderActive(){
+  const a=[];
+  if(st.bid)a.push(['bid','Bidang: '+st.bid]);
+  if(st.kel)a.push(['kel','Kelompok: '+st.kel]);
+  if(st.kem)a.push(['kem','Kemahiran: '+st.kem]);
+  if(st.jenis)a.push(['jenis','Jenis: '+st.jenis]);
+  if(st.kuat)a.push(['kuat','Kekuatan: '+st.kuat]);
+  if(st.conf)a.push(['conf','Keyakinan: '+st.conf]);
+  if(st.q)a.push(['q','Carian: '+st.q]);
+  if(st.flag)a.push(['flag','Mula baharu dan Jeda sahaja']);
+  if(st.col.size<7)a.push(['col','Lajur: '+COLS.filter(c=>st.col.has(c)).join(', ')]);
+  $('#active').innerHTML=(a.length?'<b>Penapis aktif:</b> '+a.map(x=>'<button type="button" class="af" data-clear="'+x[0]+'" title="Buang penapis ini">'+esc(x[1])+'</button>').join('')+' <button type="button" class="btn" data-reset>Set semula</button>':'<span class="count">Tiada penapis aktif.</span>')+' <span class="count" id="f-count"></span>';
+}
+function syncControls(){
+  const set=(id,v)=>{$(id).value=v};
+  set('#f-bid',st.bid);set('#f-grp',st.grp);set('#f-kel',st.kel);set('#f-kem',st.kem);set('#f-jenis',st.jenis);set('#f-kuat',st.kuat);set('#f-conf',st.conf);set('#f-q',st.q);
+  $('#f-flag').checked=st.flag;$('#f-dk').checked=st.dk;
+  document.querySelectorAll('#f-cols input').forEach(i=>{i.checked=st.col.has(i.dataset.col)});
+}
+function resetAll(){
+  st.bid='';st.grp='bidang';st.kel=st.kem=st.jenis=st.kuat=st.conf=st.q='';st.flag=false;st.col=new Set(COLS);
+  syncControls();render();
+}
+
+/* ===== Panel butiran ===== */
+const hist=[];let curSk=null;
+function linkCard(l,perspective){
+  const valid=lkValid(l);
+  const sumber=valid?'<button type="button" class="lnk" data-sk="'+esc(skOf(l.nod_sumber))+'">'+esc(l.nod_sumber)+'</button>':'<span class="bd">tiada nod sumber (nilai dalam fail: '+esc(l.nod_sumber)+')</span>';
+  const sas='<button type="button" class="lnk" data-sk="'+esc(skOf(l.nod_sasaran))+'">'+esc(l.nod_sasaran)+'</button>';
+  const low=l.keyakinan==='rendah';
+  return '<details class="lcard"><summary><span class="bd">'+esc(l.id_pautan)+'</span> '+sumber+' &rarr; '+sas+' '
+    +'<span class="bd">'+esc(l.jenis)+'</span><span class="bd">arah: '+esc(l.arah)+'</span><span class="bd">kekuatan: '+esc(l.kekuatan)+'</span><span class="bd'+(low?' low':'')+'">keyakinan: '+esc(l.keyakinan)+'</span></summary>'
+    +'<dl><dt>Jurang kedalaman</dt><dd>'+esc(l.jurang_kedalaman)+'</dd><dt>Beza notasi</dt><dd>'+esc(l.notasi_beza)+'</dd><dt>Kemahiran proses</dt><dd>'+esc(l.kemahiran_proses)+'</dd>'
+    +'<dt>Miskonsepsi</dt><dd>'+esc(l.miskonsepsi)+'</dd><dt>Konflik masa</dt><dd>'+esc(l.konflik_masa)+'</dd><dt>Sumber</dt><dd>'+esc(l.sumber)+'</dd><dt>Catatan</dt><dd>'+esc(l.catatan)+'</dd></dl></details>';
+}
+function openPanel(sk,fromBack){
+  const k=K[sk];if(!k)return;
+  if(!fromBack&&curSk&&curSk!==sk)hist.push(curSk);
+  curSk=sk;
+  const t=skThread[sk];const f=t?flags[t.i]:null;
+  const sps=spBySk[sk]||[];
+  const ins=inBySk[sk]||[], outs=outBySk[sk]||[];
+  let h='<div class="phead"><h2>'+esc(sk)+' '+esc(k.standard_kandungan)+'</h2><div class="lab">'+esc(k.bab_tajuk)+' | '+esc(k.dokumen)+'</div>'
+    +'<div class="acts"><button class="btn" type="button" id="p-back"'+(hist.length?'':' disabled')+'>Kembali</button><button class="btn" type="button" id="p-close">Tutup</button></div></div>';
+  h+='<h4>Kelompok dan kemahiran</h4><dl class="kv">'
+    +'<dt>Kelompok utama</dt><dd>'+esc(k.kelompok_utama)+'</dd><dt>Kelompok sekunder</dt><dd>'+esc(k.kelompok_sekunder||'(kosong dalam fail)')+'</dd>'
+    +'<dt>Rantaian konsep</dt><dd>'+esc(k.rantaian_konsep)+(f?'<div>'+pills(t)+'</div>':'')
+    +(RANTAIAN_NOTA[(k.rantaian_konsep||'').split(' ')[0]]?'<div class="lab" style="margin-top:4px"><span class="tag-inf">[INFERENS]</span>'+esc(RANTAIAN_NOTA[k.rantaian_konsep.split(' ')[0]])+'</div>':'')+'</dd><dt>Bidang (projek)</dt><dd><span class="tag-inf">[INFERENS]</span>'+esc(k.bidang||'(kosong dalam fail)')+'</dd>'
+    +'<dt>Bidang Pembelajaran DSKP</dt><dd><span class="tag-dat">DSKP</span>'+esc(k.bidang_dskp||'(kosong dalam fail)')+' <span class="count">(aras bab)</span></dd>'
+    +'<dt>Kemahiran utama</dt><dd>'+esc(k.kemahiran_utama)+'</dd><dt>Kemahiran sekunder</dt><dd>'+esc(k.kemahiran_sekunder||'(kosong dalam fail)')+'</dd>'
+    +'<dt>Peranan</dt><dd>'+esc(k.peranan)+'</dd><dt>Bukti</dt><dd>'+esc(k.bukti)+'</dd><dt>Sumber</dt><dd>'+esc(k.sumber)+'</dd>'
+    +'<dt>Keyakinan</dt><dd>'+cBadge(k.keyakinan)+'</dd><dt>Catatan</dt><dd>'+esc(k.catatan||'(kosong dalam fail)')+'</dd></dl>';
+  if(t){
+    h+='<h4>Dalam rantaian yang sama (klik untuk lompat)</h4><div class="sibs">'+COLS.map(c=>t.cells[c].map(s=>chipHTML(s,s===sk?'cur':'')).join('')).join('')+'</div>';
+  }
+  h+='<h4>Standard Pembelajaran ('+sps.length+')</h4>';
+  sps.forEach(p=>{
+    h+='<div class="spbox"><div><b style="font-family:var(--mono)">'+esc(p.id_nod)+'</b> <span class="bd">kata kerja: '+esc(p.kata_kerja_sp)+'</span> <span class="bd">semak visual: '+esc(p.perlu_semak_visual)+'</span>'
+      +(isAM(p.id_nod)?' <button type="button" class="btn" data-chain="'+esc(p.id_nod)+'">Lihat rantaian</button>':'')+'</div>'
+      +'<div class="txt">'+esc(p.standard_pembelajaran)+'</div>'
+      +'<dl class="kv" style="margin-top:4px"><dt>Catatan</dt><dd>'+esc(p.catatan||'(kosong dalam fail)')+'</dd><dt>Sumber</dt><dd>'+esc(p.sumber)+'</dd></dl></div>';
+  });
+  h+='<h4>Pautan masuk ('+ins.length+')</h4>'+(ins.length?ins.map(l=>linkCard(l)).join(''):'<p class="lab">Tiada pautan dengan SP SK ini sebagai sasaran. Fail pautan hanya mempunyai sasaran Matematik Tambahan.</p>');
+  h+='<h4>Pautan keluar ('+outs.length+')</h4>'+(outs.length?outs.map(l=>linkCard(l)).join(''):'<p class="lab">Tiada pautan dengan SP SK ini sebagai sumber.</p>');
+  const p=$('#panel');p.innerHTML=h;p.hidden=false;p.scrollTop=0;
+  $('#p-close').focus();
+}
+function closePanel(){$('#panel').hidden=true;curSk=null;hist.length=0}
+
+/* ===== Paparan 3: Prasyarat SP ===== */
+let chainSel='';
+function initChain(){
+  const am=D.inv.filter(r=>isAM(r.id_nod));
+  let h='<div class="sel"><label for="c-sel"><b>Pilih SP Matematik Tambahan</b></label><select id="c-sel">';
+  let curGrp='';
+  am.forEach(p=>{
+    const g=skOf(p.id_nod);
+    if(g!==curGrp){if(curGrp)h+='</optgroup>';h+='<optgroup label="'+esc(g+' '+p.standard_kandungan)+'">';curGrp=g}
+    h+='<option value="'+esc(p.id_nod)+'">'+esc(p.id_nod+' ('+p.kata_kerja_sp+')')+'</option>';
+  });
+  h+='</optgroup></select><button type="button" class="btn" id="c-prev">Sebelumnya</button><button type="button" class="btn" id="c-next">Seterusnya</button><span class="count" id="c-pos"></span></div><div id="c-body"></div>';
+  $('#vRantaian').innerHTML=h;
+  const first=am.find(p=>(byTarget[p.id_nod]||[]).filter(lkValid).length>=2)||am[0];
+  chainSel=first.id_nod;$('#c-sel').value=chainSel;
+  window.amIds=am.map(p=>p.id_nod);
+}
+function renderChain(){
+  const id=chainSel;const sp=spById[id];if(!sp)return;
+  const ix=window.amIds.indexOf(id);$('#c-pos').textContent=(ix+1)+' daripada '+window.amIds.length;$('#c-prev').disabled=ix<=0;$('#c-next').disabled=ix>=window.amIds.length-1;
+  const sk=skOf(id);const tT=TT[colOf(id)];
+  const all=byTarget[id]||[];const shown=all.filter(linkPass);
+  const valid=shown.filter(lkValid), none=shown.filter(l=>!lkValid(l));
+  const srcSks=new Set(valid.map(l=>skOf(l.nod_sumber)));
+  const ths=[];const addT=t=>{if(t&&!ths.includes(t))ths.push(t)};
+  addT(skThread[sk]);valid.forEach(l=>addT(skThread[skOf(l.nod_sumber)]));
+  let h='<div class="note"><div><b style="font-family:var(--mono)">'+esc(id)+'</b> <span class="bd">kata kerja: '+esc(sp.kata_kerja_sp)+'</span> '+cBadge(K[sk].keyakinan)+'</div><div style="white-space:pre-wrap">'+esc(sp.standard_pembelajaran)+'</div>'
+    +'<div class="lab" style="margin-top:4px">'+esc(sk)+' '+esc(sp.standard_kandungan)+' | '+esc(sp.bab_tajuk)+'</div></div>';
+  h+='<div class="legend"><span><span class="tag-dat">PAUTAN</span>nod sumber pautan daripada fail pautan (tahap SP, ditunjukkan pada tahap SK)</span><span><span class="tag-dat">RANTAIAN</span>nod lain dalam rantaian yang sama pada tingkatan terdahulu (daripada matriks_topikal, bukan pautan disahkan)</span></div>';
+  h+='<p class="tl-arrow">Garis masa dari kiri (T1) ke kanan (T5). Laluan ke belakang dibaca dari kanan ke kiri.</p>';
+  h+='<div class="tablewrap"><table class="chain"><thead><tr><th class="rowh">Rantaian</th>'+COLS.map(c=>'<th>'+c+'<small style="display:block;color:var(--muted);font-weight:400">'+COLSUB[c]+'</small></th>').join('')+'</tr></thead><tbody>';
+  ths.forEach(t=>{
+    h+='<tr><th scope="row" class="rowh">'+esc(t.rantaian)+'<div>'+pills(t)+'</div></th>';
+    COLS.forEach(c=>{
+      const items=t.cells[c].map(s=>{
+        if(s===sk)return chipHTML(s,'tgt');
+        if(srcSks.has(s))return chipHTML(s,'src');
+        if(TT[c]<tT)return chipHTML(s,'ctx');
+        return '';
+      }).join('');
+      h+='<td><div class="cell">'+items+'</div></td>';
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table></div>';
+  h+='<h3 style="margin:14px 0 6px">Pautan ke SP ini ('+shown.length+(all.length!==shown.length?' daripada '+all.length+'; '+(all.length-shown.length)+' disembunyikan oleh penapis':'')+')</h3>';
+  if(!shown.length)h+='<p class="empty">Tiada pautan sepadan dengan penapis semasa.</p>';
+  const ord=valid.slice().sort((a,b)=>TT[colOf(a.nod_sumber)]-TT[colOf(b.nod_sumber)]||COLS.indexOf(colOf(a.nod_sumber))-COLS.indexOf(colOf(b.nod_sumber)));
+  h+='<div>'+ord.concat(none).map(l=>{
+    const src=spById[l.nod_sumber];
+    return '<div class="card" style="margin-bottom:8px"><div class="lab">'+(src?esc(colOf(l.nod_sumber)+' (T'+TT[colOf(l.nod_sumber)]+')'):'Tiada nod sumber')+'</div>'
+      +(src?'<div style="white-space:pre-wrap"><b style="font-family:var(--mono)">'+esc(src.id_nod)+'</b> '+esc(src.standard_pembelajaran)+'</div>':'')+linkCard(l)+'</div>';
+  }).join('')+'</div>';
+  h+='<p class="note" style="font-size:12px">Fail pautan hanya merekod sasaran Matematik Tambahan. Rantai Matematik ke Matematik (contoh T3 ke T2) di atas datang daripada keahlian rantaian, bukan pautan SP ke SP yang dipetakan. Garis penyambung tidak dilukis.</p>';
+  $('#c-body').innerHTML=h;
+}
+
+/* ===== Paparan 4: Mula baharu dan Jeda ===== */
+function suggest(t,g){
+  const af=g.after.map(s=>K[s]);
+  const kem=[...new Set(af.map(k=>k.kemahiran_utama))].join('; ');
+  const bf=g.before.map(s=>K[s].standard_kandungan).join('; ');
+  const aft=g.after.map(s=>K[s].standard_kandungan).join('; ');
+  return '<span class="tag-inf">[INFERENS]</span>Cadangan templat: sebelum '+esc(aft)+', beri tugasan imbas kembali ringkas yang mengaktifkan semula kemahiran ('+esc(kem)+') dengan merujuk '+esc(bf)+' daripada T'+g.tFrom+'. Sebab: tiada nod rantaian ini dalam '+esc(g.missing.map(x=>'T'+x).join(', '))+' menurut fail. Guru perlu menentukan sama ada tugasan itu perlu dan setakat mana.';
+}
+function fillHTML(g){
+  const tt=g.missing.map(x=>'T'+x).join(', ');
+  let h='<div class="lab" style="margin-top:6px"><span class="tag-dat">DATA</span>';
+  if(g.fill.length){
+    h+='Pautan daripada '+tt+' ke rantaian ini ('+g.fill.length+'): '+g.fill.map(l=>esc(l.nod_sumber)+' ('+esc(l.jenis)+', '+esc(l.kekuatan)+')').join('; ')
+      +'. Kemahiran mungkin digunakan dalam topik lain pada '+tt+'. Ini tidak menutup Jeda dan tidak bermaksud konsep rantaian diajar semula.';
+  }else if(g.afterAM){
+    h+='Tiada pautan daripada '+tt+' ke rantaian ini.';
+  }else{
+    h+='Tiada data pautan: nod selepas Jeda ialah Matematik, dan pautan hanya dipetakan untuk sasaran Matematik Tambahan. Penggunaan kemahiran dalam '+tt+' tidak diketahui.';
+  }
+  return h+'</div>';
+}
+function renderJeda(){
+  const mb=[], jd=[];
+  threads.forEach(t=>{
+    if(!rowVisible(t,true))return;
+    const f=flags[t.i];
+    if(f.mula)mb.push(t);
+    f.gaps.forEach(g=>jd.push({t,g}));
+  });
+  const dep=threads.filter(t=>flags[t.i].mulaStrict&&!flags[t.i].mula);
+  let h='<div class="note"><b>Mula baharu</b>: '+threads.filter(t=>flags[t.i].mula).length+' rantaian. Takrif: rantaian tanpa nod primer Matematik, dan tiada SP Matematik Tambahan dalamnya menerima pautan kuat jenis SAMBUNGAN, GENERALISASI atau NOTASI daripada SP Matematik (pautan ALAT tidak dikira). Hasil ini bergantung pada kualiti pautan, yang belum diaudit.'
+    +(dep.length?' <b>'+dep.length+' rantaian</b> lain tiada nod primer Matematik dalam matriks tetapi berangker melalui pautan: '+dep.map(t=>esc(t.rantaian.split(' ')[0])).join(', ')+'. Ini menunjukkan isu pengelasan rantaian, bukan topik baharu.':'')
+    +'<br><b>Jeda</b>: '+threads.filter(t=>flags[t.i].gaps.length).length+' rantaian, '+threads.reduce((a,t)=>a+flags[t.i].gaps.length,0)+' kekosongan. Jeda ditakrif sebagai jarak dua tingkatan atau lebih antara dua kemunculan berturut-turut (sekurang-kurangnya satu tingkatan tiada). Hanya nod primer dikira.</div>';
+  h+='<h2 style="font-size:16px;margin:12px 0 6px">Mula baharu ('+mb.length+')</h2>';
+  h+=mb.length?'<div class="cards">'+mb.map(t=>{
+    const f=flags[t.i];
+    return '<div class="card"><h3>'+esc(t.rantaian)+'</h3><div class="lab">'+esc(t.kelompok)+' | Bidang: '+esc(t.bidang)+'</div><div class="row"><span class="pill mb">Mula baharu</span></div>'
+      +'<div class="lab">Kemunculan pertama: '+esc(COLS.filter(c=>t.cells[c].length).map(c=>c).join(', '))+'</div><div class="cell" style="margin-top:4px">'
+      +COLS.map(c=>t.cells[c].filter(skPass).map(sk=>chipHTML(sk)).join('')).join('')+'</div>'
+      +'<div class="lab" style="margin-top:6px"><span class="tag-dat">DATA</span>'+f.nLinksM+' pautan daripada SP Matematik, semuanya ALAT atau tidak kuat.</div></div>';
+  }).join('')+'</div>':'<p class="empty">Tiada rantaian Mula baharu sepadan dengan penapis.</p>';
+  h+='<h2 style="font-size:16px;margin:16px 0 6px">Jeda ('+jd.length+')</h2>';
+  h+=jd.length?'<div class="cards">'+jd.map(x=>{
+    const {t,g}=x;
+    return '<div class="card"><h3>'+esc(t.rantaian)+'</h3><div class="lab">'+esc(t.kelompok)+' | Bidang: '+esc(t.bidang)+'</div><div class="row"><span class="pill jd">'+esc(g.label)+'</span></div>'
+      +'<div class="lab">Nod sebelum jeda (T'+g.tFrom+')</div><div class="cell">'+g.before.map(s=>chipHTML(s)).join('')+'</div>'
+      +'<div class="lab" style="margin-top:6px">Nod selepas jeda (T'+g.tTo+')</div><div class="cell">'+g.after.map(s=>chipHTML(s)).join('')+'</div>'
+      +fillHTML(g)
+      +'<div style="margin-top:8px;font-size:12.5px">'+suggest(t,g)+'</div></div>';
+  }).join('')+'</div>':'<p class="empty">Tiada Jeda sepadan dengan penapis.</p>';
+  $('#vJeda').innerHTML=h;
+  $('#f-count').textContent=mb.length+' Mula baharu, '+jd.length+' Jeda dipaparkan.';
+}
+
+/* ===== Nota data (dikira daripada data) ===== */
+function renderFoot(){
+  const emptyK=(f)=>D.kel.filter(r=>!(r[f]||'').trim()).length;
+  const noSrc=L.filter(l=>!lkValid(l));
+  const unsure=D.inv.filter(r=>/tidak pasti/i.test(r.sumber));
+  const vis=D.inv.filter(r=>r.perlu_semak_visual==='Y').length;
+  const low=D.kel.filter(r=>r.keyakinan==='rendah').map(r=>r.id_sk);
+  const gapSk=[];
+  Object.keys(spBySk).forEach(sk=>{
+    const nums=spBySk[sk].map(p=>+p.id_nod.split('.').pop()).sort((a,b)=>a-b);
+    if(nums[0]!==1||nums[nums.length-1]!==nums.length)gapSk.push(sk+' (SP ada: '+nums.join(', ')+')');
+  });
+  const lowL=L.filter(l=>l.keyakinan==='rendah').length;
+  $('#foot').innerHTML='<details><summary>Nota kualiti data (dikira oleh halaman)</summary><ul>'
+    +'<li>Fail dimuatkan: '+D.meta.files.map(f=>esc(f.nama+' ('+f.baris+' baris)')).join('; ')+'.</li>'
+    +'<li>SK dengan kelompok_sekunder kosong: '+emptyK('kelompok_sekunder')+'; kemahiran_sekunder kosong: '+emptyK('kemahiran_sekunder')+'; catatan kosong: '+emptyK('catatan')+' (daripada '+D.kel.length+' SK).</li>'
+    +'<li>SP ditanda semak visual "Y": '+vis+' daripada '+D.inv.length+'. Teks SP dan Catatan ini belum disemak lawan imej PDF.</li>'
+    +'<li>SP dengan sumber "tidak pasti": '+unsure.length+' ('+esc(unsure.map(r=>r.id_nod).join(', '))+').</li>'
+    +'<li>SK keyakinan rendah ('+low.length+'): '+esc(low.join(', '))+'.</li>'
+    +'<li>Pautan keyakinan rendah: '+lowL+' daripada '+L.length+'.</li>'
+    +'<li>Pautan tanpa nod sumber sah (jenis TIADA ANGKER, nilai "-" atau "TIADA"): '+noSrc.length+' ('+esc(noSrc.map(l=>l.id_pautan).join(', '))+').</li>'
+    +'<li>SK dengan penomboran SP tidak berturutan dalam inventori: '+(gapSk.length?esc(gapSk.join('; ')):'tiada')+'.</li>'
+    +'</ul></details>';
+}
+
+/* ===== Kawalan ===== */
+let activeTab='lorong';
+function render(){
+  computeFlags();
+  renderKPIs();renderBidBar();renderActive();
+  if(activeTab==='lorong')renderLorong();
+  else if(activeTab==='rantaian')renderChain();
+  else renderJeda();
+}
+function setTab(name){
+  if(!['lorong','rantaian','jeda'].includes(name))name='lorong';
+  activeTab=name;
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===name?'true':'false'));
+  $('#vLorong').classList.toggle('hid',name!=='lorong');
+  $('#vRantaian').classList.toggle('hid',name!=='rantaian');
+  $('#vJeda').classList.toggle('hid',name!=='jeda');
+  render();
+}
+function goChain(id){
+  chainSel=id;$('#c-sel').value=id;
+  if(location.hash!=='#rantaian')location.hash='rantaian';else setTab('rantaian');
+}
+function initControls(){
+  fillSelect($('#f-bid'),'Semua bidang',bidangList);
+  fillSelect($('#f-kel'),'Semua kelompok',kelompokList);
+  const kem=[...new Set(D.kel.flatMap(k=>[k.kemahiran_utama,k.kemahiran_sekunder]).filter(Boolean))].sort();
+  fillSelect($('#f-kem'),'Semua kemahiran',kem);
+  fillSelect($('#f-jenis'),'Semua jenis',[...new Set(L.map(l=>l.jenis))]);
+  fillSelect($('#f-kuat'),'Semua kekuatan',[...new Set(L.map(l=>l.kekuatan))]);
+  fillSelect($('#f-conf'),'Semua keyakinan',['tinggi','sederhana','rendah']);
+  $('#f-cols').innerHTML=COLS.map(c=>'<label><input type="checkbox" data-col="'+c+'" checked> '+c+'</label>').join('');
+  const bind=(id,key)=>$(id).addEventListener('change',e=>{st[key]=e.target.value;render()});
+  bind('#f-bid','bid');bind('#f-grp','grp');bind('#f-kel','kel');bind('#f-kem','kem');bind('#f-jenis','jenis');bind('#f-kuat','kuat');bind('#f-conf','conf');
+  $('#f-flag').addEventListener('change',e=>{st.flag=e.target.checked;render()});
+  $('#f-dk').addEventListener('change',e=>{st.dk=e.target.checked;render()});
+  let tm=null;
+  $('#f-q').addEventListener('input',e=>{clearTimeout(tm);tm=setTimeout(()=>{st.q=e.target.value.trim().toLowerCase();render()},120)});
+  $('#f-cols').addEventListener('change',e=>{
+    const c=e.target.dataset.col;if(!c)return;
+    if(e.target.checked)st.col.add(c);else st.col.delete(c);
+    if(!st.col.size){st.col.add(c);e.target.checked=true}
+    render();
+  });
+  document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{location.hash=b.dataset.tab}));
+  window.addEventListener('hashchange',()=>setTab(location.hash.slice(1)));
+  document.addEventListener('click',e=>{
+    const rs=e.target.closest('[data-reset]');if(rs){resetAll();return}
+    const cl=e.target.closest('[data-clear]');if(cl){const k=cl.dataset.clear;if(k==='flag')st.flag=false;else if(k==='col')st.col=new Set(COLS);else st[k]='';syncControls();render();return}
+    const bb=e.target.closest('[data-bid]');if(bb){const b=bb.dataset.bid;const hc=bb.dataset.hc;
+      if(hc){st.bid=b;st.col=new Set([hc])}else{st.bid=(st.bid===b?'':b);if(!st.bid)st.col=new Set(COLS)}
+      syncControls();render();return}
+    const kp=e.target.closest('[data-kpi]');if(kp){if(kp.dataset.kpi==='mula'||kp.dataset.kpi==='jeda'){location.hash='jeda'}return}
+    const gt=e.target.closest('[data-gt]');if(gt){const k=gt.dataset.gt;if(collapsed.has(k))collapsed.delete(k);else collapsed.add(k);renderLorong();return}
+    const ga=e.target.closest('[data-gall]');if(ga){(st.grp==='bidang'?bidangList:kelompokList).forEach(g=>{const k=st.grp+':'+g;if(ga.dataset.gall==='1')collapsed.add(k);else collapsed.delete(k)});renderLorong();return}
+    if(e.target.id==='c-prev'||e.target.id==='c-next'){const ix=window.amIds.indexOf(chainSel)+(e.target.id==='c-next'?1:-1);if(ix>=0&&ix<window.amIds.length){chainSel=window.amIds[ix];$('#c-sel').value=chainSel;renderChain()}return}
+    const c=e.target.closest('[data-sk]');if(c){openPanel(c.dataset.sk);return}
+    const ch=e.target.closest('[data-chain]');if(ch){goChain(ch.dataset.chain);return}
+    if(e.target.id==='p-close'){closePanel();return}
+    if(e.target.id==='p-back'){const p=hist.pop();if(p)openPanel(p,true);return}
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#panel').hidden)closePanel()});
+  document.addEventListener('change',e=>{if(e.target.id==='c-sel'){chainSel=e.target.value;renderChain()}});
+}
+initControls();initChain();renderFoot();
+syncControls();
+setTab(location.hash?location.hash.slice(1):'lorong');
+
+(function(){var b=document.getElementById('b-theme');function l(){b.textContent='Tema: '+ptTheme.label()}l();b.addEventListener('click',function(){ptTheme.cycle()});document.addEventListener('pt-theme',l)})();
+</script>
+</body>
+</html>

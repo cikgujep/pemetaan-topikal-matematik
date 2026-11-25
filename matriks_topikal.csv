@@ -1,0 +1,55 @@
+﻿kelompok,rantaian,M1,M2,M3,M4,AM4,M5,AM5,bidang
+K01 Nombor dan kuantiti,"K01a Integer, pecahan, perpuluhan, nombor nisbah",M1-B1-SK1.1 (Nombor Nisbah) ; M1-B1-SK1.2 (Nombor Nisbah) ; M1-B1-SK1.3 (Nombor Nisbah) ; M1-B1-SK1.4 (Nombor Nisbah) ; M1-B1-SK1.5 (Nombor Nisbah),,,,,,,Algebra
+K01 Nombor dan kuantiti,K01b Faktor dan gandaan,M1-B2-SK2.1 (Faktor Dan Gandaan) ; M1-B2-SK2.2 (Faktor Dan Gandaan),,,,,,,Algebra
+K01 Nombor dan kuantiti,K01c Asas nombor,,,,M4-B2-SK2.1 (Asas Nombor),,,,Algebra
+K01 Nombor dan kuantiti,K01d Angka bererti dan bentuk piawai (tambahan),,,M3-B2-SK2.1 (Bentuk Piawai) ; M3-B2-SK2.2 (Bentuk Piawai),,,,,Algebra
+"K02 Kuasa, indeks, surd dan logaritma","K02a Kuasa dua, kuasa tiga, punca","M1-B3-SK3.1 (Kuasa Dua, Punca Kuasa Dua, Kuasa Tiga Dan Punca Kuasa Tiga) ; M1-B3-SK3.2 (Kuasa Dua, Punca Kuasa Dua, Kuasa Tiga Dan Punca Kuasa Tiga)",,,,,,,Algebra
+"K02 Kuasa, indeks, surd dan logaritma",K02b Indeks,,,M3-B1-SK1.1 (Indeks) ; M3-B1-SK1.2 (Indeks),,"AM4-B4-SK4.1 (Indeks, Surd Dan Logaritma)",,,Algebra
+"K02 Kuasa, indeks, surd dan logaritma",K02c Surd,,,,,"AM4-B4-SK4.2 (Indeks, Surd Dan Logaritma)",,,Algebra
+"K02 Kuasa, indeks, surd dan logaritma",K02d Logaritma,,,,,"AM4-B4-SK4.3 (Indeks, Surd Dan Logaritma) ; AM4-B4-SK4.4 (Indeks, Surd Dan Logaritma)",,,Algebra
+"K03 Algebra, persamaan dan ketaksamaan",K03a Ungkapan dan manipulasi algebra,M1-B5-SK5.1 (Ungkapan Algebra) ; M1-B5-SK5.2 (Ungkapan Algebra),M2-B2-SK2.1 (Pemfaktoran Dan Pecahan Algebra) ; M2-B2-SK2.2 (Pemfaktoran Dan Pecahan Algebra) ; M2-B2-SK2.3 (Pemfaktoran Dan Pecahan Algebra) ; M2-B3-SK3.1 (Rumus Algebra),,,,,,Algebra
+"K03 Algebra, persamaan dan ketaksamaan",K03b Persamaan linear dan serentak,M1-B6-SK6.1 (Persamaan Linear) ; M1-B6-SK6.2 (Persamaan Linear) ; M1-B6-SK6.3 (Persamaan Linear),,,,AM4-B3-SK3.1 (Sistem Persamaan),,,Algebra
+"K03 Algebra, persamaan dan ketaksamaan",K03c Persamaan kuadratik dan tak linear,,,,,AM4-B2-SK2.1 (Fungsi Kuadratik) ; AM4-B2-SK2.2 (Fungsi Kuadratik) ; AM4-B3-SK3.2 (Sistem Persamaan),,,Algebra
+"K03 Algebra, persamaan dan ketaksamaan",K03d Ketaksamaan dan pengaturcaraan linear,M1-B7-SK7.1 (Ketaksamaan Linear) ; M1-B7-SK7.2 (Ketaksamaan Linear),,,M4-B6-SK6.1 (Ketaksamaan Linear Dalam Dua Pemboleh Ubah) ; M4-B6-SK6.2 (Ketaksamaan Linear Dalam Dua Pemboleh Ubah),,,AM5-B7-SK7.1 (Pengaturcaraan Linear) ; AM5-B7-SK7.2 (Pengaturcaraan Linear),Algebra
+"K04 Fungsi, hubungan dan pola","K04a Pola, jujukan, janjang",,M2-B1-SK1.1 (Pola Dan Jujukan) ; M2-B1-SK1.2 (Pola Dan Jujukan) ; M2-B1-SK1.3 (Pola Dan Jujukan),,,AM4-B5-SK5.1 (Janjang) ; AM4-B5-SK5.2 (Janjang),,,Algebra
+"K04 Fungsi, hubungan dan pola","K04b Fungsi, gubahan, songsang, graf fungsi",,M2-B8-SK8.1 (Graf Fungsi) ; M2-B8-SK8.2 (Graf Fungsi),,,AM4-B1-SK1.1 (Fungsi) ; AM4-B1-SK1.2 (Fungsi) ; AM4-B1-SK1.3 (Fungsi),,,Algebra
+"K04 Fungsi, hubungan dan pola",K04c Fungsi kuadratik dan graf,,,,M4-B1-SK1.1 (Fungsi Dan Persamaan Kuadratik Dalam Satu Pemboleh Ubah),AM4-B2-SK2.3 (Fungsi Kuadratik),,,Algebra
+"K04 Fungsi, hubungan dan pola","K04d Hubungan linear, tak linear dan hukum linear",,,,,AM4-B6-SK6.1 (Hukum Linear) ; AM4-B6-SK6.2 (Hukum Linear) ; AM4-B6-SK6.3 (Hukum Linear),,,Algebra
+"K04 Fungsi, hubungan dan pola",K04e Pemodelan dengan fungsi (tambahan),,,,,,M5-B8-SK8.1 (Pemodelan Matematik),,Algebra
+"K05 Nisbah, kadar, kadaran dan ubahan","K05a Nisbah, kadar, kadaran, peratusan","M1-B4-SK4.1 (Nisbah, Kadar Dan Kadaran) ; M1-B4-SK4.2 (Nisbah, Kadar Dan Kadaran) ; M1-B4-SK4.3 (Nisbah, Kadar Dan Kadaran) ; M1-B4-SK4.4 (Nisbah, Kadar Dan Kadaran) ; M1-B4-SK4.5 (Nisbah, Kadar Dan Kadaran)",,M3-B4-SK4.1 (Lukisan Berskala),,,,,Algebra
+"K05 Nisbah, kadar, kadaran dan ubahan",K05b Ubahan,,,,,,M5-B1-SK1.1 (Ubahan) ; M5-B1-SK1.2 (Ubahan) ; M5-B1-SK1.3 (Ubahan),,Algebra
+K06 Geometri bentuk dan ruang,"K06a Garis, sudut, poligon",M1-B8-SK8.1 (Garis Dan Sudut) ; M1-B8-SK8.2 (Garis Dan Sudut) ; M1-B8-SK8.3 (Garis Dan Sudut) ; M1-B9-SK9.1 (Poligon Asas) ; M1-B9-SK9.2 (Poligon Asas) ; M1-B9-SK9.3 (Poligon Asas),M2-B4-SK4.1 (Poligon) ; M2-B4-SK4.2 (Poligon),,,,,,Geometri
+K06 Geometri bentuk dan ruang,K06b Bulatan,,M2-B5-SK5.1 (Bulatan) ; M2-B5-SK5.2 (Bulatan),M3-B6-SK6.1 (Sudut Dan Tangen Bagi Bulatan) ; M3-B6-SK6.2 (Sudut Dan Tangen Bagi Bulatan) ; M3-B6-SK6.3 (Sudut Dan Tangen Bagi Bulatan) ; M3-B6-SK6.4 (Sudut Dan Tangen Bagi Bulatan),,,,,Geometri
+K06 Geometri bentuk dan ruang,K06c Kekongruenan,,,,,,"M5-B5-SK5.1 (Kekongruenan, Pembesaran Dan Gabungan Transformasi)",,Geometri
+K06 Geometri bentuk dan ruang,"K06d Bentuk 3D, unjuran, pelan dan dongakan",,M2-B6-SK6.1 (Bentuk Geometri Tiga Dimensi) ; M2-B6-SK6.2 (Bentuk Geometri Tiga Dimensi),M3-B7-SK7.1 (Pelan Dan Dongakan) ; M3-B7-SK7.2 (Pelan Dan Dongakan),,,,,Geometri
+K07 Pengukuran,K07a Perimeter dan luas satah,M1-B10-SK10.1 (Perimeter Dan Luas) ; M1-B10-SK10.2 (Perimeter Dan Luas) ; M1-B10-SK10.3 (Perimeter Dan Luas),,,,,,,Geometri
+K07 Pengukuran,K07b Luas permukaan dan isi padu,,M2-B6-SK6.3 (Bentuk Geometri Tiga Dimensi) ; M2-B6-SK6.4 (Bentuk Geometri Tiga Dimensi),,,,,,Geometri
+K07 Pengukuran,"K07c Lilitan, lengkok, sektor, radian",,M2-B5-SK5.3 (Bulatan),,,,,AM5-B1-SK1.1 (Sukatan Membulat) ; AM5-B1-SK1.2 (Sukatan Membulat) ; AM5-B1-SK1.3 (Sukatan Membulat) ; AM5-B1-SK1.4 (Sukatan Membulat),Geometri
+"K08 Koordinat, garis lurus dan lokus","K08a Koordinat, jarak, titik tengah, pembahagi tembereng",,M2-B7-SK7.1 (Koordinat) ; M2-B7-SK7.2 (Koordinat) ; M2-B7-SK7.3 (Koordinat),,,AM4-B7-SK7.1 (Geometri Koordinat),,,Geometri
+"K08 Koordinat, garis lurus dan lokus",K08b Kecerunan dan persamaan garis,,M2-B10-SK10.1 (Kecerunan Garis Lurus),M3-B9-SK9.1 (Garis Lurus),,AM4-B7-SK7.2 (Geometri Koordinat),,,Geometri
+"K08 Koordinat, garis lurus dan lokus",K08c Lokus,,,M3-B8-SK8.1 (Lokus Dalam Dua Dimensi) ; M3-B8-SK8.2 (Lokus Dalam Dua Dimensi),,AM4-B7-SK7.4 (Geometri Koordinat),,,Geometri
+"K08 Koordinat, garis lurus dan lokus",K08d Luas poligon,,,,,AM4-B7-SK7.3 (Geometri Koordinat),,,Geometri
+K09 Transformasi dan simetri,K09a Isometri dan simetri putaran,,M2-B11-SK11.1 (Transformasi Isometri) ; M2-B11-SK11.2 (Transformasi Isometri) ; M2-B11-SK11.3 (Transformasi Isometri) ; M2-B11-SK11.4 (Transformasi Isometri) ; M2-B11-SK11.5 (Transformasi Isometri) ; M2-B11-SK11.6 (Transformasi Isometri),,,,,,Geometri
+K09 Transformasi dan simetri,K09b Pembesaran,,,,,,"M5-B5-SK5.2 (Kekongruenan, Pembesaran Dan Gabungan Transformasi)",,Geometri
+K09 Transformasi dan simetri,K09c Gabungan transformasi dan teselasi,,,,,,"M5-B5-SK5.3 (Kekongruenan, Pembesaran Dan Gabungan Transformasi) ; M5-B5-SK5.4 (Kekongruenan, Pembesaran Dan Gabungan Transformasi)",,Geometri
+K10 Trigonometri dan penyelesaian segi tiga,K10a Teorem Pythagoras,M1-B13-SK13.1 (Teorem Pythagoras) ; M1-B13-SK13.2 (Teorem Pythagoras),,,,,,,Trigonometri
+K10 Trigonometri dan penyelesaian segi tiga,K10b Nisbah trigonometri sudut tirus,,,M3-B5-SK5.1 (Nisbah Trigonometri),,,,,Trigonometri
+K10 Trigonometri dan penyelesaian segi tiga,K10c Trigonometri sebarang sudut dan graf,,,,,,M5-B6-SK6.1 (Nisbah Dan Graf Fungsi Trigonometri) ; M5-B6-SK6.2 (Nisbah Dan Graf Fungsi Trigonometri),AM5-B6-SK6.1 (Fungsi Trigonometri) ; AM5-B6-SK6.2 (Fungsi Trigonometri) ; AM5-B6-SK6.3 (Fungsi Trigonometri),Trigonometri
+K10 Trigonometri dan penyelesaian segi tiga,K10d Identiti dan rumus sudut,,,,,,,AM5-B6-SK6.4 (Fungsi Trigonometri) ; AM5-B6-SK6.5 (Fungsi Trigonometri) ; AM5-B6-SK6.6 (Fungsi Trigonometri),Trigonometri
+K10 Trigonometri dan penyelesaian segi tiga,"K10e Petua sinus, petua kosinus dan luas segi tiga",,,,,AM4-B9-SK9.1 (Penyelesaian Segi Tiga) ; AM4-B9-SK9.2 (Penyelesaian Segi Tiga) ; AM4-B9-SK9.3 (Penyelesaian Segi Tiga) ; AM4-B9-SK9.4 (Penyelesaian Segi Tiga),,,Trigonometri
+K11 Vektor dan matriks,K11a Vektor,,,,,AM4-B8-SK8.1 (Vektor) ; AM4-B8-SK8.2 (Vektor) ; AM4-B8-SK8.3 (Vektor),,,Geometri
+K11 Vektor dan matriks,K11b Matriks,,,,,,M5-B2-SK2.1 (Matriks) ; M5-B2-SK2.2 (Matriks),,Algebra
+"K12 Data, statistik dan kebarangkalian",K12a Pengendalian dan perwakilan data,M1-B12-SK12.1 (Pengendalian Data),,,,,,,Statistik
+"K12 Data, statistik dan kebarangkalian",K12b Kecenderungan memusat dan serakan,,M2-B12-SK12.1 (Sukatan Kecenderungan Memusat),,M4-B8-SK8.1 (Sukatan Serakan Data Tak Terkumpul) ; M4-B8-SK8.2 (Sukatan Serakan Data Tak Terkumpul),,M5-B7-SK7.1 (Sukatan Serakan Data Terkumpul) ; M5-B7-SK7.2 (Sukatan Serakan Data Terkumpul),,Statistik
+"K12 Data, statistik dan kebarangkalian",K12c Kebarangkalian asas dan bergabung,,M2-B13-SK13.1 (Kebarangkalian Mudah) ; M2-B13-SK13.2 (Kebarangkalian Mudah) ; M2-B13-SK13.3 (Kebarangkalian Mudah) ; M2-B13-SK13.4 (Kebarangkalian Mudah),,M4-B9-SK9.1 (Kebarangkalian Peristiwa Bergabung) ; M4-B9-SK9.2 (Kebarangkalian Peristiwa Bergabung) ; M4-B9-SK9.3 (Kebarangkalian Peristiwa Bergabung) ; M4-B9-SK9.4 (Kebarangkalian Peristiwa Bergabung),,,,Statistik
+"K12 Data, statistik dan kebarangkalian",K12d Pilih atur dan gabungan,,,,,,,AM5-B4-SK4.1 (Pilih Atur Dan Gabungan) ; AM5-B4-SK4.2 (Pilih Atur Dan Gabungan),Statistik
+"K12 Data, statistik dan kebarangkalian",K12e Pemboleh ubah rawak dan taburan,,,,,,,AM5-B5-SK5.1 (Taburan Kebarangkalian) ; AM5-B5-SK5.2 (Taburan Kebarangkalian) ; AM5-B5-SK5.3 (Taburan Kebarangkalian),Statistik
+"K12 Data, statistik dan kebarangkalian",K12f Nombor indeks (tambahan),,,,,AM4-B10-SK10.1 (Nombor Indeks) ; AM4-B10-SK10.2 (Nombor Indeks),,,Statistik
+"K13 Set, logik dan struktur diskret",K13a Set,M1-B11-SK11.1 (Pengenalan Set) ; M1-B11-SK11.2 (Pengenalan Set),,,M4-B4-SK4.1 (Operasi Set) ; M4-B4-SK4.2 (Operasi Set) ; M4-B4-SK4.3 (Operasi Set),,,,Statistik
+"K13 Set, logik dan struktur diskret",K13b Logik,,,,M4-B3-SK3.1 (Penaakulan Logik) ; M4-B3-SK3.2 (Penaakulan Logik),,,,Statistik
+"K13 Set, logik dan struktur diskret",K13c Rangkaian (teori graf),,,,M4-B5-SK5.1 (Rangkaian Dalam Teori Graf),,,,Statistik
+K14 Matematik pengguna dan kewangan,K14a Kewangan peribadi dan perlindungan,,,"M3-B3-SK3.1 (Matematik Pengguna: Simpanan Dan Pelaburan, Kredit Dan Hutang) ; M3-B3-SK3.2 (Matematik Pengguna: Simpanan Dan Pelaburan, Kredit Dan Hutang)",M4-B10-SK10.1 (Matematik Pengguna: Pengurusan Kewangan),,M5-B3-SK3.1 (Matematik Pengguna: Insurans) ; M5-B4-SK4.1 (Matematik Pengguna: Percukaian),,Pengurusan Kewangan
+K15 Kalkulus dan gerakan linear,"K15a Laju, pecutan, graf gerakan",,M2-B9-SK9.1 (Laju Dan Pecutan) ; M2-B9-SK9.2 (Laju Dan Pecutan),,M4-B7-SK7.1 (Graf Gerakan) ; M4-B7-SK7.2 (Graf Gerakan),,,,Algebra
+K15 Kalkulus dan gerakan linear,K15b Had dan pembezaan,,,,,,,AM5-B2-SK2.1 (Pembezaan) ; AM5-B2-SK2.2 (Pembezaan) ; AM5-B2-SK2.3 (Pembezaan) ; AM5-B2-SK2.4 (Pembezaan),Kalkulus
+K15 Kalkulus dan gerakan linear,K15c Pengamiran,,,,,,,AM5-B3-SK3.1 (Pengamiran) ; AM5-B3-SK3.2 (Pengamiran) ; AM5-B3-SK3.3 (Pengamiran) ; AM5-B3-SK3.4 (Pengamiran),Kalkulus
+K15 Kalkulus dan gerakan linear,K15d Kinematik gerakan linear,,,,,,,AM5-B8-SK8.1 (Kinematik Gerakan Linear) ; AM5-B8-SK8.2 (Kinematik Gerakan Linear) ; AM5-B8-SK8.3 (Kinematik Gerakan Linear) ; AM5-B8-SK8.4 (Kinematik Gerakan Linear),Kalkulus
