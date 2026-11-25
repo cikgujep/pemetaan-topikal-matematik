@@ -63,6 +63,7 @@ Bahasa Melayu mengikut istilah DSKP dan DBP. Ringkas, langsung, profesional. Jan
 | `inventori_DK27_M1.csv` | 54 SP DK2027 T1. ID: DK1-B{bab}-SP{n}. Semua disemak lawan imej PDF pada 25 Nov 2026 (perlu_semak_visual = N) |
 | `kelompok_DK27_M1.csv` | 16 subtajuk (lajur padanan_sk: SK KSSM yang dipadankan; asas pautan warisan [INFERENS] ke AM) DK2027 T1 (ID DK1-B{bab}-ST{n}) dipadankan ke rantaian sedia ada, dengan rantaian_sekunder, padanan_kssm, keyakinan |
 | `nota_serah_terima_sesiT.md`, `nota_serah_terima_sesiV.md` | Nota serah-terima |
+| `README.md`, `.gitignore` | Repositori GitHub awam https://github.com/cikgujep/pemetaan-topikal-matematik (cawangan main). PDF tidak dimuat naik (.gitignore) |
 | `halaman/` | Templat dan skrip pembina halaman interaktif, dan hasilnya |
 
 Nilai `perlu_semak_visual`: Y = teks diekstrak daripada PDF dan belum disemak lawan imej, N = telah disahkan, T = tidak berkenaan. (Takrif ini daripada nota sesi T sebagai perkara yang perlu disahkan guru; sahkan sebelum bergantung padanya.)
