@@ -327,13 +327,14 @@ function openSK(sk){
 function openDK(id){
   const s=DKST.find(x=>x.id_st===id);if(!s)return;
   const sps=DKSP.filter(p=>p.id_nod.startsWith(s.id_st.replace('-ST','-SP')+'.'));
-  const set=new Set((s.padanan_sk||'').split(';').filter(Boolean));
-  const war=L.filter(l=>valid(l)&&set.has(skOf(l.nod_sumber)));
+  const pre=s.id_st.replace('-ST','-SP')+'.';
+  const W={};((D.dk&&D.dk.waris)||[]).forEach(w=>{W[w.id_pautan]=w});
+  const war=L.filter(l=>{const w=W[l.id_pautan];return w&&(w.nod_sumber_DK27||'').split(/\s*;\s*/).some(x=>x.startsWith(pre))});
   let h='<header><h3><span class="id">'+esc(s.id_st)+' &middot; DK2027</span>'+esc(s.subtajuk)+'</h3><button class="ib" type="button" data-close aria-label="Tutup">&times;</button></header>';
   h+='<h4>Ringkasan</h4><dl class="kv"><dt>Bab</dt><dd>'+esc(s.bab_tajuk)+'</dd><dt>Bidang DK</dt><dd>'+esc(s.bidang_dk)+'</dd><dt>Rantaian</dt><dd>'+esc(s.rantaian_konsep)+(s.rantaian_sekunder?'<br><small>Sekunder: '+esc(s.rantaian_sekunder)+'</small>':'')+'</dd><dt>Padanan KSSM</dt><dd>'+esc(s.padanan_kssm)+'</dd><dt>Keyakinan</dt><dd>'+esc(s.keyakinan)+'</dd>'+(s.catatan?'<dt>Catatan</dt><dd>'+esc(s.catatan)+'</dd>':'')+'</dl>';
   h+='<h4>Standard Pembelajaran ('+sps.length+')</h4><ol>'+sps.map(p=>'<li><span class="id">'+esc(p.id_nod)+'</span>'+esc(p.standard_pembelajaran)+'</li>').join('')+'</ol>';
-  h+='<h4><span class="tag">INFERENS</span>Pautan warisan ke AM ('+war.length+')</h4>'+(war.length?'<ol>'+war.map(l=>'<li><button type="button" class="lk" data-sk="'+esc(skOf(l.nod_sasaran))+'"><span class="id">'+esc(l.nod_sumber)+' &rarr; '+esc(l.nod_sasaran)+'</span> <small>'+esc(l.jenis)+', '+esc(l.kekuatan)+'</small></button></li>').join('')+'</ol>':'<p>Tiada.</p>')
-    +'<p style="font-size:12px;color:var(--muted)">Pautan ini milik SK KSSM yang dipadankan, dianggap terpakai kepada subtajuk DK2027. Belum dipetakan terus.</p>';
+  h+='<h4><span class="tag">INFERENS</span>Pautan warisan ke AM ('+war.length+')</h4>'+(war.length?'<ol>'+war.map(l=>'<li><button type="button" class="lk" data-sk="'+esc(skOf(l.nod_sasaran))+'"><span class="id">'+esc(l.nod_sumber)+' &rarr; '+esc(l.nod_sasaran)+'</span> <small>'+esc(l.jenis)+', '+esc(l.kekuatan)+', kesan DK27: '+esc(W[l.id_pautan].kesan)+'</small></button></li>').join('')+'</ol>':'<p>Tiada.</p>')
+    +'<p style="font-size:12px;color:var(--muted)">Pautan asal bersumber SP M1 lama yang dipetakan ke SP subtajuk ini (pemetaan_M1_lama_ke_DK27.csv). Kesan ialah [INFERENS].</p>';
   showDrawer(h);
 }
 let lastFocus=null;

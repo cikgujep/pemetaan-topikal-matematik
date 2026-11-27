@@ -1,6 +1,6 @@
 # Projek Pemetaan Topikal Matematik
 
-Baca fail ini dahulu pada setiap sesi. Kemudian baca `nota_serah_terima_sesiV.md` untuk keadaan terkini dan perkara terbuka.
+Baca fail ini dahulu pada setiap sesi. Kemudian baca `nota_serah_terima_sesiW.md` (terkini) dan `nota_serah_terima_sesiV.md` untuk keadaan terkini dan perkara terbuka.
 
 ## Peranan
 
@@ -60,9 +60,13 @@ Bahasa Melayu mengikut istilah DSKP dan DBP. Ringkas, langsung, profesional. Jan
 | `pautan_AM4.csv` (228), `pautan_AM5.csv` (128) | Pautan SP ke SP, sasaran sentiasa SP Matematik Tambahan |
 | `inventori_sesi0.csv` | Inventori awal sesi 0 |
 | `DK Matematik Tingkatan 1 (bermula 2027).pdf` | Dokumen Kurikulum baharu T1 (DK2027). Struktur: Bidang, Tajuk, Subtajuk, SP (tiada SK) |
-| `inventori_DK27_M1.csv` | 54 SP DK2027 T1. ID: DK1-B{bab}-SP{n}. Semua disemak lawan imej PDF pada 25 Nov 2026 (perlu_semak_visual = N) |
+| `inventori_DK27_M1.csv` | 54 SP DK2027 T1. ID: DK1-B{bab}-SP{n}. Semua teks SP disemak lawan imej PDF pada 25 Nov 2026 (perlu_semak_visual = N). Lajur kata_kerja_sp, catatan dan perlu_semak_visual_catatan (22 Y, Nota belum disemak) ditambah 27 Nov 2026 |
 | `kelompok_DK27_M1.csv` | 16 subtajuk (lajur padanan_sk: SK KSSM yang dipadankan; asas pautan warisan [INFERENS] ke AM) DK2027 T1 (ID DK1-B{bab}-ST{n}) dipadankan ke rantaian sedia ada, dengan rantaian_sekunder, padanan_kssm, keyakinan |
-| `nota_serah_terima_sesiT.md`, `nota_serah_terima_sesiV.md` | Nota serah-terima |
+| `inventori_DK27_M1_catatan.csv` | Input pengguna: 54 SP DK27 dengan kata kerja dan Nota (sudah digabung ke inventori_DK27_M1.csv) |
+| `pemetaan_M1_lama_ke_DK27.csv` | Input pengguna: 139 SP M1 lama, status (GABUNG, TIADA DALAM T1 BAHARU, UBAH, TURUN KE NOTA, KEKAL, PECAH), id_baharu, keyakinan |
+| `pemetaan_M1_DK27_dari_lama.csv` | Input pengguna: 54 SP DK27 dengan SP lama sumbernya |
+| `pautan_warisan_DK27.csv` | 69 pautan bersumber SP M1 dengan kesan DK27 (kekal, perlu semak, dilemahkan, terputus dalam T1 sahaja) dan sumber_lain_kekal. [INFERENS]. Dimuat oleh bina.py |
+| `nota_serah_terima_sesiT.md`, `nota_serah_terima_sesiV.md`, `nota_serah_terima_sesiW.md` | Nota serah-terima |
 | `README.md`, `.gitignore` | Repositori GitHub awam https://github.com/cikgujep/pemetaan-topikal-matematik (cawangan main). PDF tidak dimuat naik (.gitignore). GitHub Pages: https://cikgujep.github.io/pemetaan-topikal-matematik/ (index.html mengalih ke halaman/pemetaan_topikal.html). Selepas bina.py, commit dan push untuk mengemas kini laman |
 | `halaman/` | Templat dan skrip pembina halaman interaktif, dan hasilnya |
 
@@ -92,6 +96,7 @@ Nilai `perlu_semak_visual`: Y = teks diekstrak daripada PDF dan belum disemak la
 - Sepanduk "Draf: belum diaudit" dibuang atas arahan pengguna pada 25 Nov 2026. Data masih belum diaudit.
 - Halaman: tajuk "Pemetaan Topikal Matematik dan Matematik Tambahan", gaya glassmorphism ditulis dalam CSS sendiri (bukan Tailwind CDN) supaya halaman kekal berdiri sendiri. Halaman digunakan untuk perbincangan dengan guru dan pegawai.
 - DK2027 (25 Nov 2026, arahan pengguna): lapisan pilihan pada Lorong, suis "DK2027" menambah lajur "M1 DK2027" selepas M1. Tidak mempengaruhi penanda Mula baharu, Jeda, KPI atau pautan. Padanan rantaian ialah [INFERENS]. Hanya T1 tersedia.
+- Kesan DK27 (27 Nov 2026): peraturan KEKAL/PECAH/GABUNG = kekal, UBAH = perlu semak, TURUN KE NOTA = dilemahkan, TIADA DALAM T1 BAHARU = terputus dalam T1 sahaja. Jangan katakan kandungan dipindah ke tingkatan lain selagi DK27 T2 hingga T5 belum ada. Penanda kesan hanya muncul apabila suis DK2027 dihidupkan; mod KSSM tidak berubah.
 - Cadangan menghidupkan semula kemahiran pada Paparan 4 ialah templat [INFERENS], bukan pertimbangan per rantaian.
 
 ## Membina halaman interaktif

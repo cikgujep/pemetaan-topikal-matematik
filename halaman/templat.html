@@ -292,6 +292,16 @@ td.dkc{background:color-mix(in srgb,var(--dk) 6%,transparent)}
 :root{--dk:#0f7a5c;--dk-fill:#dcf3ea}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--dk:#5fd3a8;--dk-fill:#123a2e}}
 :root[data-theme="dark"]{--dk:#5fd3a8;--dk-fill:#123a2e}
+
+/* Penanda kesan DK27 */
+.dkrow{display:inline-flex;flex-wrap:wrap;gap:3px;align-items:center;font-size:10px;font-weight:800;margin-top:3px;color:var(--dk)}
+.dkx{display:inline-block;font-size:10px;font-weight:800;border-radius:4px;padding:0 4px;border:1.5px solid;white-space:nowrap}
+.dkx.terputus{color:#b3261e;border-color:#b3261e;background:rgba(179,38,30,.10)}
+.dkx.dilemahkan{color:var(--warn);border-color:var(--warn);background:var(--warn-fill)}
+.dkx.perlu-semak{color:var(--muted);border-color:var(--muted);border-style:dashed}
+.dkx.kekal{color:var(--dk);border-color:var(--dk)}
+:root[data-theme="dark"] .dkx.terputus{color:#ff8a80;border-color:#ff8a80}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .dkx.terputus{color:#ff8a80;border-color:#ff8a80}}
 </style>
 </head>
 <body>
@@ -450,13 +460,18 @@ function rowVisible(t,ignoreFlag){
 
 /* ===== Elemen kecil ===== */
 const collapsed=new Set();
+function dkChipTag(sk,am){
+  if(!am||!st.dk||!DKST.length)return '';
+  const c=dkImpact(sk);const ks=['terputus','dilemahkan','perlu semak'].filter(k=>c[k]);
+  return ks.length?'<span class="dkrow" title="Kesan DK27 T1 pada pautan bersumber M1 [INFERENS]">DK27: '+ks.map(k=>kesanTag(k,c[k])).join(' ')+'</span>':'';
+}
 function chipHTML(sk,extra){
   const k=K[sk];if(!k)return '';
   const am=isAM(sk);const low=k.keyakinan==='rendah';
   const role=extra==='cur'?'<span class="tag">SEMASA</span>':extra==='tgt'?'<span class="tag">SASARAN</span>':extra==='src'?'<span class="tag">SUMBER PAUTAN</span>':extra==='ctx'?'<span class="tag">RANTAIAN</span>':'';
   return '<button type="button" class="chip '+(am?'am':'m')+(low?' low':'')+(extra?' '+extra:'')+'" data-sk="'+esc(sk)+'" title="'+esc(sk+' '+k.standard_kandungan+' | '+k.bab_tajuk+' | keyakinan '+k.keyakinan)+'">'
     +'<span class="id">'+esc(sk)+'</span><span class="tt">'+esc(k.standard_kandungan)+'</span>'
-    +(low?'<span class="tag">keyakinan rendah</span>':'')+role+'</button>';
+    +(low?'<span class="tag">keyakinan rendah</span>':'')+role+dkChipTag(sk,am)+'</button>';
 }
 const cBadge=c=>'<span class="bd'+(c==='rendah'?' low':'')+'">keyakinan '+esc(c)+'</span>';
 function pills(t){
@@ -472,16 +487,22 @@ function fillSelect(el,first,vals){
 /* ===== Paparan 1: Lorong ===== */
 /* ===== DK2027 (kurikulum baharu T1), lapisan pilihan; tidak mempengaruhi penanda Mula baharu dan Jeda ===== */
 const DKST=(D.dk&&D.dk.st)||[], DKSP=(D.dk&&D.dk.sp)||[];
-/* Pautan warisan [INFERENS]: pautan sedia ada daripada SK KSSM yang dipadankan, dianggap terpakai kepada subtajuk DK2027 */
-function dkWarisLinks(s){
-  const set=new Set((s.padanan_sk||'').split(';').filter(Boolean));
-  return L.filter(l=>lkValid(l)&&set.has(skOf(l.nod_sumber)));
+/* Pautan warisan DK27 [INFERENS], aras SP, daripada pautan_warisan_DK27.csv (69 pautan bersumber SP M1 lama).
+   Kesan: kekal, perlu semak, dilemahkan, terputus. Terputus bermaksud dalam T1 sahaja; DK27 T2 hingga T5 belum ada. */
+const WARIS={};((D.dk&&D.dk.waris)||[]).forEach(w=>{WARIS[w.id_pautan]=w});
+const KESAN_ORD=['terputus','dilemahkan','perlu semak','kekal'];
+const kesanTag=(k,n)=>'<span class="dkx '+k.replace(' ','-')+'">'+(n!=null?n+' ':'')+esc(k)+'</span>';
+function dkImpact(sk){
+  const c={};L.forEach(l=>{if(skOf(l.nod_sasaran)!==sk)return;const w=WARIS[l.id_pautan];if(w)c[w.kesan]=(c[w.kesan]||0)+1});
+  return c;
 }
 function dkWaris(s){
-  const ls=dkWarisLinks(s);
-  if(!ls.length)return '<div><b>Pautan ke AM:</b> tiada pautan warisan</div>';
-  const tg=[...new Set(ls.map(l=>skOf(l.nod_sasaran)))].sort();
-  return '<div><span class="tag-inf">[INFERENS]</span><b>Pautan warisan ke AM:</b> '+ls.length+' pautan daripada SK KSSM yang dipadankan, ke '+tg.map(x=>esc(x)).join(', ')+'</div>';
+  const pre=s.id_st.replace('-ST','-SP')+'.';
+  const ws=Object.values(WARIS).filter(w=>(w.nod_sumber_DK27||'').split(/\s*;\s*/).some(x=>x.startsWith(pre)));
+  if(!ws.length)return '<div><b>Pautan ke AM:</b> tiada pautan warisan daripada SP subtajuk ini</div>';
+  const c={};ws.forEach(w=>{c[w.kesan]=(c[w.kesan]||0)+1});
+  const tg=[...new Set(ws.map(w=>skOf(w.nod_sasaran)))].sort();
+  return '<div><span class="tag-inf">[INFERENS]</span><b>Pautan warisan ke AM:</b> '+KESAN_ORD.filter(k=>c[k]).map(k=>kesanTag(k,c[k])).join(' ')+' ke '+tg.map(x=>esc(x)).join(', ')+'</div>';
 }
 function dkCell(t){
   const b=t.rantaian.split(' ')[0];
@@ -502,6 +523,7 @@ function renderLorong(){
   let h='<div class="legend"><span><span class="sw m"></span>Matematik (T1 hingga T5)</span><span><span class="sw am"></span>Matematik Tambahan (sempadan berganda, corak garis)</span><span><span class="sw m low"></span>Keyakinan rendah (sempadan putus-putus dan teks)</span>'
     +'<span><span class="pill mb">Mula baharu</span> tiada nod Matematik dan tiada pautan kuat bukan-ALAT daripada Matematik</span><span><span class="pill jd">Jeda T2, T3</span> tingkatan tiada nod (sel berjalur)</span></div>'
     +'<p class="note" style="font-size:12px">Label Jeda hanya menyatakan kekosongan dalam kurikulum, bukan bahawa murid telah lupa. AM4 dikira T4 dan AM5 dikira T5. Penanda dikira daripada keseluruhan data, bukan hasil penapis.</p>';
+  if(st.dk&&DKST.length)h+='<p class="note" style="font-size:12px"><b>Mod DK2027.</b> Chip Matematik Tambahan menunjukkan kesan DK27 T1 pada pautan bersumber SP M1 lama: '+kesanTag('terputus')+' tiada SP padanan dalam DK27 T1 (T2 hingga T5 belum ada), '+kesanTag('dilemahkan')+' kandungan hanya dalam Nota, '+kesanTag('perlu semak')+' SP diubah. <span class="tag-inf">[INFERENS]</span> Lihat panel butiran untuk sumber lain yang masih kekal.</p>';
   h+=overviewHTML();
   h+='<div class="ctl"><button class="btn" type="button" data-gall="1">Lipat semua kumpulan</button><button class="btn" type="button" data-gall="0">Buka semua kumpulan</button></div>';
   const vis=COLS.filter(c=>st.col.has(c));
@@ -597,15 +619,18 @@ function resetAll(){
 
 /* ===== Panel butiran ===== */
 const hist=[];let curSk=null;
+function dkDl(w){
+  return '<dt>Kesan DK27 T1</dt><dd><span class="tag-inf">[INFERENS]</span>'+kesanTag(w.kesan)+' Status pemetaan: '+esc(w.status_pemetaan)+(w.nod_sumber_DK27?'; SP DK27: '+esc(w.nod_sumber_DK27):'')+'. Sumber lain: '+esc(w.sumber_lain_kekal)+'. Keyakinan: '+esc(w.keyakinan)+'. '+esc(w.catatan)+'</dd>';
+}
 function linkCard(l,perspective){
   const valid=lkValid(l);
   const sumber=valid?'<button type="button" class="lnk" data-sk="'+esc(skOf(l.nod_sumber))+'">'+esc(l.nod_sumber)+'</button>':'<span class="bd">tiada nod sumber (nilai dalam fail: '+esc(l.nod_sumber)+')</span>';
   const sas='<button type="button" class="lnk" data-sk="'+esc(skOf(l.nod_sasaran))+'">'+esc(l.nod_sasaran)+'</button>';
   const low=l.keyakinan==='rendah';
   return '<details class="lcard"><summary><span class="bd">'+esc(l.id_pautan)+'</span> '+sumber+' &rarr; '+sas+' '
-    +'<span class="bd">'+esc(l.jenis)+'</span><span class="bd">arah: '+esc(l.arah)+'</span><span class="bd">kekuatan: '+esc(l.kekuatan)+'</span><span class="bd'+(low?' low':'')+'">keyakinan: '+esc(l.keyakinan)+'</span></summary>'
+    +'<span class="bd">'+esc(l.jenis)+'</span><span class="bd">arah: '+esc(l.arah)+'</span><span class="bd">kekuatan: '+esc(l.kekuatan)+'</span><span class="bd'+(low?' low':'')+'">keyakinan: '+esc(l.keyakinan)+'</span>'+(st.dk&&WARIS[l.id_pautan]?' <span class="dkrow">DK27: '+kesanTag(WARIS[l.id_pautan].kesan)+'</span>':'')+'</summary>'
     +'<dl><dt>Jurang kedalaman</dt><dd>'+esc(l.jurang_kedalaman)+'</dd><dt>Beza notasi</dt><dd>'+esc(l.notasi_beza)+'</dd><dt>Kemahiran proses</dt><dd>'+esc(l.kemahiran_proses)+'</dd>'
-    +'<dt>Miskonsepsi</dt><dd>'+esc(l.miskonsepsi)+'</dd><dt>Konflik masa</dt><dd>'+esc(l.konflik_masa)+'</dd><dt>Sumber</dt><dd>'+esc(l.sumber)+'</dd><dt>Catatan</dt><dd>'+esc(l.catatan)+'</dd></dl></details>';
+    +(st.dk&&WARIS[l.id_pautan]?dkDl(WARIS[l.id_pautan]):'')+'<dt>Miskonsepsi</dt><dd>'+esc(l.miskonsepsi)+'</dd><dt>Konflik masa</dt><dd>'+esc(l.konflik_masa)+'</dd><dt>Sumber</dt><dd>'+esc(l.sumber)+'</dd><dt>Catatan</dt><dd>'+esc(l.catatan)+'</dd></dl></details>';
 }
 function openPanel(sk,fromBack){
   const k=K[sk];if(!k)return;

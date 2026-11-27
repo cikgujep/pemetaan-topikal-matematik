@@ -39,6 +39,9 @@ if os.path.exists(os.path.join(INDUK, 'kelompok_DK27_M1.csv')):
     dk['st'] = baca('kelompok_DK27_M1.csv'); dk['sp'] = baca('inventori_DK27_M1.csv')
     files.append({'nama': 'kelompok_DK27_M1.csv', 'baris': len(dk['st'])})
     files.append({'nama': 'inventori_DK27_M1.csv', 'baris': len(dk['sp'])})
+    if os.path.exists(os.path.join(INDUK, 'pautan_warisan_DK27.csv')):
+        dk['waris'] = baca('pautan_warisan_DK27.csv')
+        files.append({'nama': 'pautan_warisan_DK27.csv', 'baris': len(dk['waris'])})
 data = {'inv': inv, 'kel': kel, 'mx': mx, 'pautan': p4 + p5, 'dk': dk, 'meta': {'files': files}}
 js = json.dumps(data, ensure_ascii=False, separators=(',', ':'))
 js = js.replace('</', '<\\/').replace('<!--', '<\\!--').replace('\u2028', '\\u2028').replace('\u2029', '\\u2029')
